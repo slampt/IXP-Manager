@@ -520,7 +520,7 @@ class SwitchController extends IXP_Controller_FrontEnd
         $superuser = $this->getUser()->getPrivs() == \Entities\User::AUTH_SUPERUSER;
         if( $this->getParam( 'ixp', false ) )
         {
-            $this->view->ixp = $ixp = $this->getD2R( '\\Entities\\IXP' )->find( $this->getParam( 'ixp' ) );
+            $this->view->ixp = $ixp = null;
             if( !$superuser && !$this->getUser()->getCustomer()->getIXPs()->contains( $ixp ) )
                 $this->redirectAndEnsureDie( '/erro/insufficient-permissions' );
         }
@@ -528,7 +528,7 @@ class SwitchController extends IXP_Controller_FrontEnd
             $this->view->ixp = $ixp = $this->getUser()->getCustomer()->getIXPs()[0];
         else
         {
-            $ixp = $this->getD2R( "\\Entities\\IXP" )->findAll();
+            $ixp = null;
             if( $ixp )
                 $this->view->ixp = $ixp = $ixp[0];
             else
@@ -537,7 +537,7 @@ class SwitchController extends IXP_Controller_FrontEnd
 
         $this->view->registerClass( 'PHYSICALINTERFACE', '\\Entities\\PhysicalInterface' );
         $this->view->states   = \Entities\PhysicalInterface::$STATES;
-        $this->view->ixps     = $ixps     = $this->getD2R( '\\Entities\\IXP'      )->getNames( $this->getUser() );
+        $this->view->ixps     = $ixps     = null;
         $this->view->vlans    = $vlans    = $this->getD2R( '\\Entities\\Vlan'     )->getNames( 1, $ixp );
         $this->view->switches = $switches = $this->getD2R( '\\Entities\\Switcher' )->getNames( false, 0, $ixp );
 

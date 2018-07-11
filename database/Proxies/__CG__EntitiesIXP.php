@@ -64,10 +64,10 @@ class IXP extends \Entities\IXP implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'name', 'shortname', 'address1', 'address2', 'address3', 'address4', 'country', 'id', 'Infrastructures', '' . "\0" . 'Entities\\IXP' . "\0" . 'Customers', '' . "\0" . 'Entities\\IXP' . "\0" . 'TrafficDaily'];
+            return ['__isInitialized__', 'name', 'shortname', 'address1', 'address2', 'address3', 'address4', 'country', 'id'];
         }
 
-        return ['__isInitialized__', 'name', 'shortname', 'address1', 'address2', 'address3', 'address4', 'country', 'id', 'Infrastructures', '' . "\0" . 'Entities\\IXP' . "\0" . 'Customers', '' . "\0" . 'Entities\\IXP' . "\0" . 'TrafficDaily'];
+        return ['__isInitialized__', 'name', 'shortname', 'address1', 'address2', 'address3', 'address4', 'country', 'id'];
     }
 
     /**
@@ -340,105 +340,6 @@ class IXP extends \Entities\IXP implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getId', []);
 
         return parent::getId();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function addInfrastructure(\Entities\Infrastructure $infrastructures)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addInfrastructure', [$infrastructures]);
-
-        return parent::addInfrastructure($infrastructures);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function removeInfrastructure(\Entities\Infrastructure $infrastructures)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeInfrastructure', [$infrastructures]);
-
-        return parent::removeInfrastructure($infrastructures);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getInfrastructures()
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getInfrastructures', []);
-
-        return parent::getInfrastructures();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function addCustomer(\Entities\Customer $customers)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addCustomer', [$customers]);
-
-        return parent::addCustomer($customers);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function removeCustomer(\Entities\Customer $customers)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeCustomer', [$customers]);
-
-        return parent::removeCustomer($customers);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getCustomers()
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getCustomers', []);
-
-        return parent::getCustomers();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function addTrafficDaily(\Entities\TrafficDaily $trafficDaily)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addTrafficDaily', [$trafficDaily]);
-
-        return parent::addTrafficDaily($trafficDaily);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function removeTrafficDaily(\Entities\TrafficDaily $trafficDaily)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeTrafficDaily', [$trafficDaily]);
-
-        return parent::removeTrafficDaily($trafficDaily);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getTrafficDaily()
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getTrafficDaily', []);
-
-        return parent::getTrafficDaily();
     }
 
 }

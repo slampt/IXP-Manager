@@ -34,7 +34,7 @@
         echo $t->insert(
             "services/grapher/mrtg/target", [
                 'trafficTypes' => \IXP\Utils\Grapher\Mrtg::TRAFFIC_TYPES,
-                'mrtgPrefix'   => sprintf( "ixp%03d-infra%03d", $t->ixp->getId(), $infra->getId() ),
+                'mrtgPrefix'   => sprintf( "ixp%03d-infra%03d", 1, $infra->getId() ),
                 'portIds'      => $t->data['infraports'][$infra->getId()],
                 'data'         => $t->data,
                 'graphTitle'   => sprintf( config('identity.orgname') . " %%s / second on %s", $infra->getName() ),
@@ -52,7 +52,7 @@
         echo $t->insert(
             "services/grapher/mrtg/target", [
                 'trafficTypes' => \IXP\Utils\Grapher\Mrtg::TRAFFIC_TYPES,
-                'mrtgPrefix'   => sprintf( "ixp%03d", $t->ixp->getId() ),
+                'mrtgPrefix'   => sprintf( "ixp%03d", 1 ),
                 'portIds'      => $t->data['ixpports'],
                 'data'         => $t->data,
                 'graphTitle'   => sprintf( config('identity.orgname') . " - %%s / second" ),

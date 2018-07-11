@@ -780,32 +780,5 @@ class TrafficDaily
     {
         return $this->Customer;
     }
-    /**
-     * @var \Entities\IXP
-     */
-    private $IXP;
 
-
-    /**
-     * Set IXP
-     *
-     * @param \Entities\IXP $iXP
-     * @return TrafficDaily
-     */
-    public function setIXP(\Entities\IXP $iXP = null)
-    {
-        $this->IXP = $iXP;
-    
-        return $this;
-    }
-
-    /**
-     * Get IXP
-     *
-     * @return \Entities\IXP 
-     */
-    public function getIXP()
-    {
-        return $this->IXP;
-    }
 }

@@ -71,7 +71,7 @@ class DashboardController extends IXP_Controller_AuthRequiredAction
         }
 
         if( $this->multiIXP() )
-            $this->view->validIXPs = $this->getD2R( "\\Entities\\IXP" )->getNamesNotAssignedToCustomer( $this->getUser()->getCustomer()->getId() );
+            $this->view->validIXPs = null;
 
         // do we have any notes?
         $this->_fetchCustomerNotes( $this->getCustomer()->getId(), true );

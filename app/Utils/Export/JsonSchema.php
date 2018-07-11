@@ -22,8 +22,16 @@ namespace IXP\Utils\Export;
  *
  * http://www.gnu.org/licenses/gpl-2.0.html
  */
+use D2EM;
 
-use Entities\{Customer, Infrastructure, IXP, Router, Switcher, VirtualInterface};
+use Entities\{
+    Customer            as CustomerEntity,
+    Infrastructure      as InfrastructureEntity,
+    NetworkInfo         as NetworkInfoEntity,
+    Router              as RouterEntity,
+    Switcher            as SwitcherEntity,
+    VirtualInterface    as VirtualInterfaceEntity
+};
 
 use IXP\Exceptions\Utils\ExportException;
 
@@ -68,7 +76,10 @@ class JsonSchema
      * @param bool   $asArray Do not convert to JSON but rather return the PHP array
      * @param bool   $detailed Create the very detailed version (usually for logged in users)
      * @param bool   $tags     Include customer tags
+     *
      * @return string|array
+     *
+     * @throws
      */
     public function get( $version = null, $asArray = false, $detailed = true, $tags = false )
     {
@@ -119,17 +130,14 @@ class JsonSchema
     {
         $ixpinfo = [];
 
-        /** @var IXP $ixp */
-        $ixp = d2r( 'IXP' )->getDefault();
-
-        foreach( $ixp->getInfrastructures() as $infra ) {
+        foreach( D2EM::getRepository( InfrastructureEntity::class )->findAll() as $infra ) {
 
             $i = [];
-            /** @var Infrastructure $infra */
+            /** @var InfrastructureEntity $infra */
             $i['shortname'] = $infra->getName();
-            $i['name'] = config('identity.legalname');
-            $i['country'] = config('identity.location.country');
-            $i['url'] = config('identity.corporate_url');
+            $i['name']      = config('identity.legalname');
+            $i['country']   = config('identity.location.country');
+            $i['url']       = config('identity.corporate_url');
 
             if( $infra->getPeeringdbIxId() ) {
                 $i[ 'peeringdb_id' ] = intval( $infra->getPeeringdbIxId() );
@@ -143,21 +151,21 @@ class JsonSchema
 
             $i['ixp_id'] = $infra->getId();    // referenced in member's connections section
 
-            $i['support_email'] = config('identity.support_email');
-            $i['support_phone'] = config('identity.support_phone');
+            $i['support_email']         = config('identity.support_email');
+            $i['support_phone']         = config('identity.support_phone');
             $i['support_contact_hours'] = config('identity.support_hours');
 
             // $infra['stats_api'] = FIXME;
-            $i['emergency_email'] = config('identity.support_email');
-            $i['emergency_phone'] = config('identity.support_phone');
-            $i['emergency_contact_hours'] = config('identity.support_hours');
-            $i['billing_contact_hours'] = config('identity.billing_hours');
-            $i['billing_email'] = config('identity.billing_email');
-            $i['billing_phone'] = config('identity.billing_phone');
+            $i['emergency_email']           = config('identity.support_email');
+            $i['emergency_phone']           = config('identity.support_phone');
+            $i['emergency_contact_hours']   = config('identity.support_hours');
+            $i['billing_contact_hours']     = config('identity.billing_hours');
+            $i['billing_email']             = config('identity.billing_email');
+            $i['billing_phone']             = config('identity.billing_phone');
 
-            $i['peering_policy_list'] = array_values(\Entities\Customer::$PEERING_POLICIES);
+            $i['peering_policy_list']       = array_values(CustomerEntity::$PEERING_POLICIES);
 
-            $i['vlan'] = d2r('NetworkInfo')->asVlanEuroIXExportArray( $infra );
+            $i['vlan'] = D2EM::getRepository( NetworkInfoEntity::class )->asVlanEuroIXExportArray( $infra );
 
             if( $version >= self::EUROIX_JSON_VERSION_0_7 ) {
                 if( !config( 'ixp_fe.frontend.disabled.lg' ) ) {
@@ -183,15 +191,18 @@ class JsonSchema
     /**
      * Collate the IXP's switch information for the JSON schema export
      *
+     * @param $version
+     * @param InfrastructureEntity $infra
+     *
      * @return array
      */
-    private function getSwitchInfo( $version, Infrastructure $infra )
+    private function getSwitchInfo( $version, InfrastructureEntity $infra )
     {
         $data = [];
 
-        /** @var Switcher $switch */
+        /** @var SwitcherEntity $switch */
         foreach( $infra->getSwitchers() as $switch ) {
-            if( $switch->getSwitchtype() != Switcher::TYPE_SWITCH || !$switch->getActive() ) {
+            if( $switch->getSwitchtype() != SwitcherEntity::TYPE_SWITCH || !$switch->getActive() ) {
                 continue;
             }
 
@@ -221,19 +232,22 @@ class JsonSchema
      * Collate the IXP's member information for the JSON schema export
      *
      * @param string $version The version to collate the detail for
+     *
      * @return array
+     *
+     * @throws
      */
     private function getMemberInfo( string $version, bool $detailed, bool $tags )
     {
         $memberinfo = [];
 
         if( $version >= self::EUROIX_JSON_VERSION_0_7 ) {
-            $routeServerIPs = d2r( 'Router' )->getAllPeeringIPs( Router::TYPE_ROUTE_SERVER );
-            $routeCollectorIPs = d2r( 'Router' )->getAllPeeringIPs( Router::TYPE_ROUTE_COLLECTOR );
+            $routeServerIPs     = D2EM::getRepository( RouterEntity::class )->getAllPeeringIPs( RouterEntity::TYPE_ROUTE_SERVER );
+            $routeCollectorIPs  = D2EM::getRepository( RouterEntity::class )->getAllPeeringIPs( RouterEntity::TYPE_ROUTE_COLLECTOR );
         }
 
         $customers = OSS_Array::reindexObjects(
-            OSS_Array::reorderObjects( d2r( 'Customer' )->getConnected( false, false ),
+            OSS_Array::reorderObjects( D2EM::getRepository( CustomerEntity::class )->getConnected( false, false ),
                 'getAutsys', SORT_NUMERIC
             ),
             'getId'
@@ -241,10 +255,10 @@ class JsonSchema
 
         $cnt = 0;
 
-        /** @var Customer $c */
+        /** @var CustomerEntity $c */
         foreach( $customers as $c ) {
             $connlist = [];
-            /** @var VirtualInterface $vi */
+            /** @var VirtualInterfaceEntity $vi */
             foreach( $c->getVirtualInterfaces() as $vi ) {
 
                 $iflist = [];
@@ -403,16 +417,16 @@ class JsonSchema
     private function xlateMemberType( $ixpmType )
     {
         switch( $ixpmType ) {
-            case Customer::TYPE_FULL:
+            case CustomerEntity::TYPE_FULL:
                 return 'peering';
 
-            case Customer::TYPE_INTERNAL:
+            case CustomerEntity::TYPE_INTERNAL:
                 return 'ixp';
 
-            case Customer::TYPE_PROBONO:
+            case CustomerEntity::TYPE_PROBONO:
                 return 'peering';
 
-            case Customer::TYPE_ROUTESERVER:
+            case CustomerEntity::TYPE_ROUTESERVER:
                 return 'ixp';
 
             default:

@@ -23,8 +23,6 @@ namespace IXP\Contracts\Grapher;
  * http://www.gnu.org/licenses/gpl-2.0.html
  */
 
-use Entities\IXP;
-
 use IXP\Services\Grapher\Graph;
 
  /**

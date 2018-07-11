@@ -87,16 +87,14 @@ class Vlan extends EntityRepository
      * Return an array of all VLAN names where the array key is the VLAN id (**not tag**).
      *
      * @param int           $type The VLAN types to return (see TYPE_ constants).
-     * @param \Entities\IXP $ixp  IXP to filter vlan names
+
      * @return array An array of all VLAN names with the vlan id as the key.
      */
     public function getNames( $type = self::TYPE_NORMAL, $ixp = false )
     {
         $vlans = [];
-        foreach( $this->getAndCache( $type ) as $a )
-        {
-            if( ( $ixp && $a->getInfrastructure()->getIXP() == $ixp ) || !$ixp )
-                $vlans[ $a->getId() ] = $a->getName();
+        foreach( $this->getAndCache( $type ) as $a ) {
+            $vlans[ $a->getId() ] = $a->getName();
         }
 
         return $vlans;

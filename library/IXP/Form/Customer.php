@@ -320,31 +320,6 @@ class IXP_Form_Customer extends IXP_Form
     }
 
     /**
-     * Sets IXP form element to drop down or hidden depends on
-     * multi IXP is enabled or not.
-     *
-     * @param bool $multiIXP Flag if multi ixp mode enabled
-     * @return IXP_Form_Infrastructure
-     */
-    public function setMultiIXP( $multiIXP, $isEdit )
-    {
-        if( !$multiIXP )
-        {
-            $ixp = $this->createElement( 'hidden', 'ixp' );
-            $ixp->setValue( '1' );
-            $this->addElement( $ixp  );
-        }
-        else if( !$isEdit )
-        {
-            $ixp = self::getPopulatedSelectIXP( 'ixp' );
-            $ixp->setLabel( "Intial IXP" );
-            $this->addElement( $ixp  );
-        }
-
-        return $this;
-    }
-
-    /**
 
      * Create a SELECT / dropdown element of all IRRDB names indexed by their id.
      *
@@ -362,28 +337,6 @@ class IXP_Form_Customer extends IXP_Form
             ->setErrorMessages( [ _( 'Please select an IRRDB source' ) ] );
 
         return $e;
-    }
-
-    /**
-     * Create a SELECT / dropdown element of all IXP names indexed by their id.
-     *
-     * @return Zend_Form_Element_Select The select element
-     */
-    public static function getPopulatedSelectIXP( )
-    {
-        $sw = new Zend_Form_Element_Select( 'ixp' );
-
-        $maxId = self::populateSelectFromDatabase( $sw, '\\Entities\\IXP', 'id', 'name', 'name', 'ASC' );
-
-        $sw->setRegisterInArrayValidator( true )
-            ->setRequired( true )
-            ->setLabel( _( 'IXP' ) )
-            ->setAttrib( 'class', 'chzn-select' )
-            ->addValidator( 'between', false, array( 1, $maxId ) )
-            ->setErrorMessages( [ 'Please select an IXP' ] );
-
-        return $sw;
-
     }
 
 }

@@ -42,7 +42,6 @@ class Infrastructure extends Graph {
 
     /**
      * Infrastructure to graph
-     * @var \Entities\IXP
      */
     private $infrastructure = null;
 

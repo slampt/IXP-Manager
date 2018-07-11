@@ -43,7 +43,6 @@ use Entities\{
     CustomerNote            as CustomerNoteEntity,
     CustomerTag             as CustomerTagEntity,
     IRRDBConfig             as IRRDBConfigEntity,
-    IXP                     as IXPEntity,
     NetworkInfo             as NetworkInfoEntity,
     RSPrefix                as RSPrefixEntity,
     User                    as UserEntity
@@ -292,7 +291,6 @@ class CustomerController extends Controller
             $c->setBillingDetails( $bdetail );
             $c->setRegistrationDetails( $rdetail );
 
-            $c->addIXP( D2EM::getRepository( IXPEntity::class )->getDefault() );
         }
 
         if( $r->input( 'irrdb' ) ) {

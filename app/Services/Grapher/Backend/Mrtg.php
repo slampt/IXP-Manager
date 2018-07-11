@@ -29,7 +29,8 @@ use IXP\Exceptions\Services\Grapher\CannotHandleRequestException;
 use IXP\Exceptions\Utils\Grapher\FileError as FileErrorException;
 
 use Entities\{
-    IXP                     as IXPEntity,
+    Customer                as CustomerEntity,
+    Infrastructure          as InfrastructureEntity,
     PhysicalInterface       as PhysicalInterfaceEntity,
     SwitchPort              as SwitchPortEntity,
     Switcher                as SwitcherEntity,
@@ -102,14 +103,16 @@ class Mrtg extends GrapherBackend implements GrapherBackendContract {
      *
      * @param int $type The type of configuration to generate
      * @param array $options
+     *
      * @return array
+     *
+     * @throws
      */
     public function generateConfiguration( int $type = self::GENERATED_CONFIG_TYPE_MONOLITHIC, array $options = [] ): array
     {
         return [
             View::make( 'services.grapher.mrtg.monolithic', [
-                    'ixp'        => D2EM::getRepository( IXPEntity::class )->getDefault(),
-                    'data'       => $this->getPeeringPorts( D2EM::getRepository( IXPEntity::class )->getDefault() ),
+                    'data'       => $this->getPeeringPorts(),
                     'snmppasswd' => config('grapher.backends.mrtg.snmppasswd'),
                 ]
             )->render(),
@@ -135,10 +138,9 @@ class Mrtg extends GrapherBackend implements GrapherBackendContract {
      * * array `['ixpports']` conataining the PhysicalInterfaceEntity IDs of peering ports
      *
      *
-     * @param IXPEntity $ixp The IXP to generate the config for (multi-IXP mode)
      * @return array
      */
-    public function getPeeringPorts( IXPEntity $ixp ): array {
+    public function getPeeringPorts(): array {
         $data = [];
         $data['ixpports']            = [];
         $data['ixpports_maxbytes']   = 0;
@@ -156,7 +158,7 @@ class Mrtg extends GrapherBackend implements GrapherBackendContract {
         // we need to wrap switch ports in physical interfaces for switch aggregates and, as such, we need to use unused physical interface IDs
         $maxPiID = 0;
 
-        foreach( $ixp->getCustomers() as $c ) {
+        foreach( D2EM::getRepository( CustomerEntity::class )->findAll() as $c ) {
 
             foreach( $c->getVirtualInterfaces() as $vi ) {
                 /** @var VirtualInterfaceEntity $vi*/
@@ -171,10 +173,6 @@ class Mrtg extends GrapherBackend implements GrapherBackendContract {
                         $maxPiID = $pi->getId();
                     }
 
-                    // we're not multi-ixp in v4 but we'll catch non-relavent ports here
-                    if( $pi->getSwitchPort()->getSwitcher()->getInfrastructure()->getIXP()->getId() != $ixp->getId() ) {
-                        break 2;
-                    }
 
                     if( !$pi->statusIsConnectedOrQuarantine() || !$pi->getSwitchPort()->getSwitcher()->getActive() ) {
                         continue;
@@ -216,7 +214,7 @@ class Mrtg extends GrapherBackend implements GrapherBackendContract {
 
         // include core switch ports.
         // This is a slight hack as the template requires PhysicalInterfaces so we wrap core SwitchPorts in temporary PhyInts.
-        foreach( $ixp->getInfrastructures() as $infra ) {
+        foreach( D2EM::getRepository( InfrastructureEntity::class )->findAll() as $infra ) {
             foreach( $infra->getSwitchers() as $switch ) {
                 /** @var SwitcherEntity $switch */
 
@@ -437,14 +435,14 @@ class Mrtg extends GrapherBackend implements GrapherBackendContract {
         switch( $graph->classType() ) {
             case 'IXP':
                 /** @var Graph\IXP $graph */
-                return sprintf( "%s/ixp/ixp%03d-%s%s.%s", $config['logdir'], $graph->ixp()->getId(),
+                return sprintf( "%s/ixp/ixp%03d-%s%s.%s", $config['logdir'], 1,
                     $graph->category(), $loggyType ? '' : "-{$graph->period()}", $type );
                 break;
 
             case 'Infrastructure':
                 /** @var Graph\Infrastructure $graph */
                 return sprintf( "%s/infras/%03d/ixp%03d-infra%03d-%s%s.%s", $config['logdir'],
-                    $graph->infrastructure()->getId(), $graph->infrastructure()->getIXP()->getId(),
+                    $graph->infrastructure()->getId(), 1,
                     $graph->infrastructure()->getId(), $graph->category(), $loggyType ? '' : "-{$graph->period()}", $type );
                 break;
 

@@ -24,10 +24,11 @@
 use IXP\Services\Grapher;
 use IXP\Services\Grapher\{Graph};
 
-use Entities\IXP  as IXPEntity;
-use Entities\User as UserEntity;
+use Entities\{
+    User as UserEntity
+};
 
-use Auth, D2EM;
+use Auth;
 
 /**
  * Grapher -> Abstract Graph
@@ -40,49 +41,16 @@ use Auth, D2EM;
  */
 class IXP extends Graph {
 
-    /**
-     * IXP to graph
-     * @var \Entities\IXP
-     */
-    private $ixp = null;
-
-
+    
     /**
      * Constructor
      * @param Grapher $grapher
-     * @param IXPEntity $ixp
      */
-    public function __construct( Grapher $grapher, IXPEntity $ixp ) {
+    public function __construct( Grapher $grapher ) {
         parent::__construct( $grapher );
-
-        // set a default IXP
-        $this->ixp = $ixp;
     }
 
 
-
-
-    /**
-     * Get the IXP we're set to use
-     * @return \Entities\IXP
-     */
-    public function ixp(): IXPEntity {
-        return $this->ixp;
-    }
-
-    /**
-     * Set the IXP we should use
-     * @param IXPEntity $ixp
-     * @return IXP Fluid interface
-     */
-    public function setIXP( IXPEntity $ixp ): IXP {
-        if( $this->ixp() && $this->ixp()->getId() != $ixp->getId() ) {
-            $this->wipe();
-        }
-
-        $this->ixp = $ixp;
-        return $this;
-    }
 
     /**
      * Set parameters in bulk from associative array
@@ -95,12 +63,6 @@ class IXP extends Graph {
     public function setParamsFromArray( array $params ): Graph {
         parent::setParamsFromArray( $params );
 
-        if( isset( $params['ixp'] ) ) {
-            /** @var IXPEntity $ixp */
-            $ixp = D2EM::getRepository( IXPEntity::class )->find( $params['ixp'] );
-            $this->setIXP( $ixp );
-        }
-
         return $this;
     }
 
@@ -109,7 +71,7 @@ class IXP extends Graph {
      * @return string
      */
     public function name(): string {
-        return $this->ixp()->getName();
+        return "INEX";
     }
 
     /**
@@ -119,7 +81,7 @@ class IXP extends Graph {
      * @return string
      */
     public function identifier(): string {
-        return sprintf( "ixp%03d", $this->ixp()->getId() );
+        return sprintf( "ixp%03d", 1 );
     }
 
 
@@ -162,7 +124,7 @@ class IXP extends Graph {
      */
     public function url( array $overrides = [] ): string {
         return parent::url( $overrides ) . sprintf("&id=%d",
-            isset( $overrides['id']   ) ? $overrides['id']   : $this->ixp()->getId()
+            isset( $overrides['id']   ) ? $overrides['id']   : 1
         );
     }
 
@@ -175,27 +137,8 @@ class IXP extends Graph {
      */
     public function getParamsAsArray(): array {
         $p = parent::getParamsAsArray();
-        $p['id'] = $this->ixp()->getId();
+        $p['id'] = 1;
         return $p;
-    }
-
-
-    /**
-     * Process user input for the parameter: ixp
-     *
-     * Note that this function just sets the default if the input is invalid.
-     * If you want to force an exception in such cases, use setIXP()
-     *
-     * @param int $v The user input value
-     * @return IXPEntity The verified / sanitised / default value
-     * @throws
-     */
-    public static function processParameterIXP( int $v ): IXPEntity {
-        $ixp = null;
-        if( !$v || !( $ixp = d2r( 'IXP' )->find( $v ) ) ) {
-            $ixp = D2EM::getRepository( IXPEntity::class )->getDefault();
-        }
-        return $ixp;
     }
 
 

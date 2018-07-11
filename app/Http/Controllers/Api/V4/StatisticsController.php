@@ -23,13 +23,9 @@ namespace IXP\Http\Controllers\Api\V4;
  * http://www.gnu.org/licenses/gpl-2.0.html
  */
 
-use Cache, D2EM, Grapher;
+use Cache, Grapher;
 
 use Carbon\Carbon;
-
-use Entities\{
-    IXP as IXPEntity
-};
 
 use Illuminate\Http\JsonResponse;
 
@@ -75,8 +71,7 @@ class StatisticsController extends Controller
     {
         $data = Cache::remember( 'public_overall_stats_by_month', 14400, function() {
 
-            $ixp   = D2EM::getRepository( IXPEntity::class )->getDefault();
-            $graph = Grapher::ixp( $ixp )->setPeriod( Graph::PERIOD_YEAR );
+            $graph = Grapher::ixp()->setPeriod( Graph::PERIOD_YEAR );
 
             $graph->authorise();
 

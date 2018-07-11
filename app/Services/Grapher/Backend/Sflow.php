@@ -33,8 +33,6 @@ use IXP\Utils\Grapher\{
     Rrd  as RrdUtil
 };
 
-use Entities\IXP;
-
 use Log;
 
 /**

@@ -30,7 +30,7 @@ use IXP\Services\Grapher\Graph as Graph;
 
 use Entities\{
     Customer            as CustomerEntity,
-    IXP                 as IXPEntity,
+    Infrastructure      as InfrastructureEntity,
     VirtualInterface    as VirtualInterfaceEntity,
     VlanInterface       as VlanInterfaceEntity
 };
@@ -86,7 +86,6 @@ class AdminController extends Controller
             $speeds          = [];
             $byLocation      = [];
             $byLan           = [];
-            $byIxp           = [];
             $custsByLocation = [];
 
             foreach( $vis as $vi ) {
@@ -106,10 +105,6 @@ class AdminController extends Controller
                     $byLan[ $infrastructure ] = [];
                 }
 
-                if( !isset( $byIxp[ $vi['ixp'] ] ) ) {
-                    $byIxp[ $vi[ 'ixp' ] ] = [];
-                }
-
                 if( !isset( $speeds[ $vi['speed'] ] ) ) {
                     $speeds[ $vi[ 'speed' ] ] = 1;
                 } else {
@@ -127,11 +122,6 @@ class AdminController extends Controller
                     $byLocation[ $location ][ $vi[ 'speed' ] ]++;
                 }
 
-                if( !isset( $byixp[ $vi['ixp'] ][ $vi['speed'] ] ) ) {
-                    $byIxp[ $vi[ 'ixp' ] ][ $vi[ 'speed' ] ] = 1;
-                } else {
-                    $byIxp[ $vi[ 'ixp' ] ][ $vi[ 'speed' ] ]++;
-                }
 
                 if( !isset( $byLan[ $infrastructure ][ $vi['speed'] ] ) ) {
                     $byLan[ $infrastructure ][ $vi[ 'speed' ] ] = 1;
@@ -147,7 +137,6 @@ class AdminController extends Controller
             $cTypes['custsByLocation']  = $custsByLocation;
             $cTypes['byLocation']       = $byLocation;
             $cTypes['byLan']            = $byLan;
-            $cTypes['byIxp']            = $byIxp;
 
             $cTypes['rsUsage']          = D2EM::getRepository( VlanInterfaceEntity::class )->getRsClientUsagePerVlan();
             $cTypes['ipv6Usage']        = D2EM::getRepository( VlanInterfaceEntity::class )->getIPv6UsagePerVlan();
@@ -176,13 +165,13 @@ class AdminController extends Controller
         if( $request->query( 'refresh_cache', 0 ) || !( $graphs = Cache::get( 'admin_stats_'.$period ) ) ) {
             $graphs = [];
 
-            $graphs['ixp'] = $grapher->ixp( D2EM::getRepository(IXPEntity::class )->getDefault() )
+            $graphs['ixp'] = $grapher->ixp()
                 ->setType(     Graph::TYPE_PNG )
                 ->setProtocol( Graph::PROTOCOL_ALL )
                 ->setPeriod(   $period )
                 ->setCategory( Graph::CATEGORY_BITS );
 
-            foreach( D2EM::getRepository(IXPEntity::class )->getDefault()->getInfrastructures() as $inf ) {
+            foreach( D2EM::getRepository(InfrastructureEntity::class )->findAll() as $inf ) {
                 $graphs[ $inf->getId()] = $grapher->infrastructure( $inf )
                     ->setType(     Graph::TYPE_PNG )
                     ->setProtocol( Graph::PROTOCOL_ALL )

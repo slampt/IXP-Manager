@@ -167,10 +167,8 @@ class Upgrade extends GrapherCommand {
      * Generate commands for IXP graphs
      */
     private function ix() {
-        $i = $this->ixp();
-
         // need to convert between the old name and the new name
-        $graph = Grapher::ixp( $i );
+        $graph = Grapher::ixp( );
 
         // aggregate graph name from v3
         $aggname = $this->option( 'agg-name' ) ? $this->option( 'agg-name' ) : 'XXXXXX';
@@ -274,7 +272,7 @@ class Upgrade extends GrapherCommand {
      * Generate commands for member directories graphs
      */
     private function memberdirs() {
-        $pps = $this->mrtg->getPeeringPorts( $this->ixp() );
+        $pps = $this->mrtg->getPeeringPorts();
 
         foreach( $pps['custs'] as $id => $cust ) {
 
@@ -298,7 +296,7 @@ class Upgrade extends GrapherCommand {
      * Generate commands for physical interfaces graphs
      */
     private function physints() {
-        $pps = $this->mrtg->getPeeringPorts( $this->ixp() );
+        $pps = $this->mrtg->getPeeringPorts();
 
         foreach( $pps['custports'] as $cid => $custpis ) {
             foreach( $custpis as $piid ) {
@@ -332,7 +330,7 @@ class Upgrade extends GrapherCommand {
      * Generate commands for member LAG graphs
      */
     private function memberlags() {
-        $pps = $this->mrtg->getPeeringPorts( $this->ixp() );
+        $pps = $this->mrtg->getPeeringPorts();
 
         foreach( $pps['custlags'] as $cid => $lags ) {
 
@@ -374,7 +372,7 @@ class Upgrade extends GrapherCommand {
      * Generate commands for customer aggregate graphs
      */
     private function customeragg() {
-        $pps = $this->mrtg->getPeeringPorts( $this->ixp() );
+        $pps = $this->mrtg->getPeeringPorts();
 
         foreach( $pps['custs'] as $cid => $c ) {
 

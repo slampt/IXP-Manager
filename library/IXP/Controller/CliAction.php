@@ -67,37 +67,6 @@ class IXP_Controller_CliAction extends OSS_Controller_CliAction
 
 
     /**
-     * CLI utility function to get the requested IXP.
-     *
-     * Most CLI actions require a specific IXP in multi-IXP mode. This function looks for
-     * that paramater, validates it, loads and returns the requested IXP. In non-multi-IXP
-     * environments, it returns the default IXP.
-     *
-     * @param bool $required If false, will return false in multi-IXP mode if no / invalid IXP specified
-     * @return \Entities\IXP The requested / default IXP
-     */
-    public function cliResolveIXP( $required = true )
-    {
-        // what IXP are we running on here?
-        if( $this->multiIXP() )
-        {
-            $ixpid = $this->getParam( 'ixp', false );
-
-            if( !$ixpid || !( $ixp = $this->getD2R( '\\Entities\\IXP' )->find( $ixpid ) ) )
-            {
-                if( $required )
-                    die( "ERROR: Invalid or no IXP specified.\n" );
-
-                return false;
-            }
-        }
-        else
-            $ixp = $this->getD2R( '\\Entities\\IXP' )->getDefault();
-
-        return $ixp;
-    }
-
-    /**
      * CLI utility function to get and validate a given VLAN by ID
      *
      * @param bool $required If false, will return false if no / invalid VLAN ID specified

@@ -27,7 +27,6 @@ use App, Auth, D2EM;
 use Entities\{
     Customer            as CustomerEntity,
     Infrastructure      as InfrastructureEntity,
-    IXP                 as IXPEntity,
     PhysicalInterface   as PhysicalInterfaceEntity,
     Switcher            as SwitchEntity,
     TrafficDaily        as TrafficDailyEntity,
@@ -87,17 +86,16 @@ class StatisticsController extends Controller
      * Show overall IXP graphs
      *
      * @param string $category Category of graph to show (e.g. bits / pkts)
+     *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @throws \IXP_Exception
-     * @throws \IXP\Exceptions\Services\Grapher\ParameterException
-     * @throws \Doctrine\ORM\ORMException
+     *
+     * @throws
      */
     public function ixp( string $category = Graph::CATEGORY_BITS ){
-        $ixp      = D2EM::getRepository( IXPEntity::class )->getDefault();
         $grapher  = App::make('IXP\Services\Grapher');
         $category = Graph::processParameterCategory( $category, true );
 
-        $graph = $grapher->ixp( $ixp )->setType( Graph::TYPE_PNG )->setProtocol( Graph::PROTOCOL_ALL )->setCategory( $category );
+        $graph = $grapher->ixp()->setType( Graph::TYPE_PNG )->setProtocol( Graph::PROTOCOL_ALL )->setCategory( $category );
         $graph->authorise();
 
         return view( 'statistics/ixp' )->with([

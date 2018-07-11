@@ -51,7 +51,6 @@ use Cache;
 use Config;
 
 use Entities\{
-    IXP,
     Infrastructure,
     Vlan,
     Switcher,
@@ -208,11 +207,10 @@ class Grapher {
 
     /**
      * Get an instance of an IXP graph
-     * @param \Entities\IXP $ixp
      * @return \IXP\Services\Grapher\Graph\IXP
      */
-    public function ixp( IXP $ixp ): IXPGraph {
-        return new IXPGraph( $this, $ixp );
+    public function ixp(): IXPGraph {
+        return new IXPGraph( $this );
     }
 
     /**

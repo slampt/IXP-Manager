@@ -26,9 +26,9 @@ namespace IXP\Http\Controllers;
 use Cache, D2EM, Former, Redirect, Validator;
 
 use Entities\{
-    Infrastructure      as InfrastructureEntity,
-    IXP                 as IXPEntity
+    Infrastructure      as InfrastructureEntity
 };
+
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 
@@ -180,7 +180,6 @@ class InfrastructureController extends Doctrine2Frontend {
         $this->object->setIxfIxId(          $request->input( 'ixf_ix_id'    ) ? $request->input( 'ixf_ix_id'    ) : null );
         $this->object->setPeeringdbIxId(    $request->input( 'pdb_ixp'      ) ? $request->input( 'pdb_ixp'      ) : null );
         $this->object->setIsPrimary(   $request->input( 'primary'      ) ?? 0 );
-        $this->object->setIXP(                  D2EM::getRepository( IXPEntity::class )->getDefault() );
 
         D2EM::flush($this->object);
 

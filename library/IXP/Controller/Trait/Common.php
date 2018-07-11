@@ -192,27 +192,4 @@ trait IXP_Controller_Trait_Common
         return $c;
     }
 
-    /**
-     * Load an IXP from the database by ID but redirect to `error/error` if no such IXP.
-     *
-     * @param int $id The IXP ID to load
-     * @param string $redirect Alternative location to redirect to (if null, `error/error`, if false, return false on error)
-     * @return \Entities\IXP The IXP object
-     */
-    protected function loadIxpById( $id, $redirect = null )
-    {
-        $i = $this->getD2R( '\\Entities\\IXP' )->find( $id );
-
-        if( !$id || !$i )
-        {
-            if( $redirect === false )
-                return false;
-
-            $this->addMessage( "Could not load the IXP object", OSS_Message::ERROR );
-            $this->redirect( $redirect === null ? '' : $redirect );
-        }
-
-        return $i;
-    }
-
 }

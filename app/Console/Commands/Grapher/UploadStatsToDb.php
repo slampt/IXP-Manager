@@ -86,7 +86,6 @@ class UploadStatsToDb extends GrapherCommand {
                 $td->setDay( new DateTime( $day ) );
                 $td->setCategory( $category );
                 $td->setCustomer( $cust );
-                $td->setIXP( D2EM::getRepository('Entities\IXP')->getDefault() );
 
                 foreach( Graph::PERIOD_DESCS as $period => $name ) {
                     $stats = $graph->setPeriod($period)->statistics();

@@ -15238,13 +15238,12 @@ namespace IXP\Support\Facades {
         /**
          * Get an instance of an IXP graph
          *
-         * @param \Entities\IXP $ixp
          * @return \IXP\Services\Grapher\Graph\IXP 
          * @static 
          */ 
-        public static function ixp($ixp)
+        public static function ixp()
         {
-            return \IXP\Services\Grapher::ixp($ixp);
+            return \IXP\Services\Grapher::ixp();
         }
         
         /**
