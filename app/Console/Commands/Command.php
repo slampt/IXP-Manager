@@ -1,7 +1,7 @@
 <?php namespace IXP\Console\Commands;
 
 use Symfony\Component\Console\Output\OutputInterface;
-
+use Entities\IXP;
 
 abstract class Command extends \Illuminate\Console\Command {
 

@@ -24,11 +24,10 @@
 use IXP\Services\Grapher;
 use IXP\Services\Grapher\{Graph};
 
-use Entities\{
-    User as UserEntity
-};
+use Entities\IXP  as IXPEntity;
+use Entities\User as UserEntity;
 
-use Auth;
+use Auth, D2EM;
 
 /**
  * Grapher -> Abstract Graph
@@ -41,7 +40,7 @@ use Auth;
  */
 class IXP extends Graph {
 
-    
+
     /**
      * Constructor
      * @param Grapher $grapher
@@ -49,8 +48,6 @@ class IXP extends Graph {
     public function __construct( Grapher $grapher ) {
         parent::__construct( $grapher );
     }
-
-
 
     /**
      * Set parameters in bulk from associative array

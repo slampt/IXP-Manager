@@ -111,9 +111,7 @@ class Grapher
 
         switch( $target ) {
             case 'ixp':
-                $ixp = IXPGraph::processParameterIXP( (int)$request->input( 'id', 0 ) );
-                $request->id = $ixp->getId();
-                $graph = $grapher->ixp( $ixp )->setParamsFromArray( $request->all() );
+                $graph = $grapher->ixp()->setParamsFromArray( $request->all() );
                 break;
 
             case 'infrastructure':
