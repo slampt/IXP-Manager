@@ -90,7 +90,6 @@ class IXP_Controller_Action extends OSS_Controller_Action
         $this->view->registerClass( 'VLAN',       '\\Entities\\Vlan' );
 
         $this->view->resellerMode         = $this->resellerMode();
-        $this->view->multiIXP             = $this->multiIXP();
         $this->view->as112UiActive        = $this->as112UiActive();
         $this->view->logoManagementActive = $this->logoManagementActive();
 

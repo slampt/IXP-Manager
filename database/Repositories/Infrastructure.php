@@ -4,6 +4,8 @@ namespace Repositories;
 
 use Doctrine\ORM\EntityRepository;
 
+use IXP\Http\Controllers\Doctrine2Frontend;
+
 /**
  * Infrastructure
  *
@@ -47,42 +49,7 @@ class Infrastructure extends EntityRepository
         return $infras;
     }
     
-    /**
-     * Return the primary infrastructure (for a given IXP, or the default IXP)
-     *
 
-     * @param bool $throw If true (default) throw an excpetion on database inconsistency (no primary, more that one priamry)
-     *
-     * @return \Entities\Infrastructure The primary infrastructure for a given IXP. Or, if `$throw` is false, return false if no primary.
-     *
-     * @throws
-     */
-    public function getPrimary( $throw = true )
-    {
-
-        $infra = $this->getEntityManager()->createQuery(
-                "SELECT i
-                    FROM Entities\\Infrastructure i
-                    WHERE i.isPrimary = 1"
-            )
-            ->useResultCache( true, 7200, self::CACHE_KEY_PRIMARY )
-            ->getResult();
-        
-        if( !$infra || count( $infra ) > 1 )
-        {
-            // uh oh, inconsistency
-            if( !$throw )
-                return false;
-            
-            throw new \IXP_Exception(
-                'When seeking the primary infrastructure of IXP ID # we found none or more than one.'
-                    . ' There must be one (and only one) infrastructure marked as private per IXP'
-            );
-        }
-        
-        return $infra[0];
-    }
-    
     /**
      * Get all infrastructures for an IXP
      *
@@ -106,7 +73,7 @@ class Infrastructure extends EntityRepository
     /**
      * Get all infrastructures (or a particular one) for listing on the frontend CRUD
      *
-     * @see \IXP\Http\Controller\Doctrine2Frontend
+     * @see Doctrine2Frontend
      *
      *
      * @param \stdClass $feParams
@@ -136,27 +103,6 @@ class Infrastructure extends EntityRepository
         $query = $this->getEntityManager()->createQuery( $dql );
 
         return $query->getArrayResult();
-    }
-    
-    
-    /**
-     * Get all infrastructures for an IXP as an array indexed by their ids
-     *
-     * @param string $key The property of the infrastructure to place in the array (e.g. `Name`, `Shortname`)
-     *
-     * @return array The infrastructures for a given IXP
-     */
-    public function getAllAsArray( $key = 'Name' )
-    {
-        $infras = [];
-        $fn = "get{$key}";
-        
-        $oInfras = $this->getAll();
-
-        foreach( $oInfras as $i )
-            $infras[ $i->getId() ] = $i->$fn();
-
-        return $infras;
     }
 
 }

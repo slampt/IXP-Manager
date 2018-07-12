@@ -2,7 +2,9 @@
 
 namespace Entities;
 
-use Doctrine\ORM\Mapping as ORM;
+use Entities\{
+    Customer    as CustomerEntity
+};
 
 /**
  * Entities\TrafficDaily
@@ -145,7 +147,7 @@ class TrafficDaily
     protected $id;
 
     /**
-     * @var Entities\Customer
+     * @var CustomerEntity
      */
     protected $Customer;
 
@@ -761,10 +763,10 @@ class TrafficDaily
     /**
      * Set Customer
      *
-     * @param Entities\Customer $customer
+     * @param CustomerEntity $customer
      * @return TrafficDaily
      */
-    public function setCustomer(\Entities\Customer $customer = null)
+    public function setCustomer( CustomerEntity $customer = null)
     {
         $this->Customer = $customer;
     
@@ -774,7 +776,7 @@ class TrafficDaily
     /**
      * Get Customer
      *
-     * @return Entities\Customer 
+     * @return CustomerEntity
      */
     public function getCustomer()
     {

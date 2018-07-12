@@ -2,7 +2,28 @@
 
 namespace Entities;
 
-use Doctrine\ORM\Mapping as ORM;
+use Entities\{
+    Customer                    as CustomerEntity,
+    CustomerEquipment           as CustomerEquipmentEntity,
+    CustomerNote                as CustomerNoteEntity,
+    CustomerTag                 as CustomerTagEntity,
+    CompanyBillingDetail        as CompanyBillingDetailEntity,
+    CompanyRegisteredDetail     as CompanyRegisteredDetailEntity,
+    ConsoleServerConnection     as ConsoleServerConnectionEntity,
+    Contact                     as ContactEntity,
+    IRRDBConfig                 as IRRDBConfigEntity,
+    IrrdbAsn                    as IrrdbAsnEntity,
+    IrrdbPrefix                 as IrrdbPrefixEntity,
+    Logo                        as LogoEntity,
+    PatchPanelPort              as PatchPanelPortEntity,
+    PeeringManager              as PeeringManagerEntity,
+    PeeringMatrix               as PeeringMatrixEntity,
+    RSPrefix                    as RSPrefixEntity,
+    TrafficDaily                as TrafficDailyEntity,
+    Traffic95thMonthly          as Traffic95thMonthlyEntity,
+    User                        as UserEntity,
+    VirtualInterface            as VirtualInterfaceEntity
+};
 
 use IXP\Exceptions\GeneralException;
 
@@ -194,6 +215,67 @@ class Customer
     protected $id;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $logos;
+
+    /**
+     * @var string $noc24hphone
+     */
+    protected $noc24hphone;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    protected $RSPrefixes;
+
+    /**
+     * @var IRRDBConfigEntity
+     */
+    protected $IRRDB;
+
+    /**
+     * @var string
+     */
+    protected $peeringDb;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    protected $Notes;
+
+
+    /**
+     * @var string
+     */
+    protected $peeringmacrov6;
+
+    /**
+     * @var string
+     */
+    protected $abbreviatedName;
+
+    /**
+     * @var string
+     */
+    protected $MD5Support;
+
+    /**
+     * @var boolean
+     */
+    protected $isReseller;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    protected $ResoldCustomers;
+
+    /**
+     * @var CustomerEntity
+     */
+    protected $Reseller;
+
+    /**
      * @var \Doctrine\Common\Collections\ArrayCollection
      */
     protected $VirtualInterfaces;
@@ -254,12 +336,12 @@ class Customer
     protected $TrafficDailies;
 
     /**
-     * @var \Entities\CompanyRegisteredDetail
+     * @var CompanyRegisteredDetailEntity
      */
     protected $RegistrationDetails;
 
     /**
-     * @var \Entities\CompanyBillingDetail
+     * @var CompanyBillingDetailEntity
      */
     protected $BillingDetails;
 
@@ -272,6 +354,11 @@ class Customer
      * @var \Doctrine\Common\Collections\Collection
      */
     private $patchPanelPorts;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $IrrdbASNs;
 
 
     /**
@@ -883,10 +970,10 @@ class Customer
     /**
      * Add VirtualInterfaces
      *
-     * @param Entities\VirtualInterface $virtualInterfaces
+     * @param VirtualInterfaceEntity $virtualInterfaces
      * @return Customer
      */
-    public function addVirtualInterface(\Entities\VirtualInterface $virtualInterfaces)
+    public function addVirtualInterface( VirtualInterfaceEntity $virtualInterfaces)
     {
         $this->VirtualInterfaces[] = $virtualInterfaces;
 
@@ -896,9 +983,9 @@ class Customer
     /**
      * Remove VirtualInterfaces
      *
-     * @param VirtualInterface $virtualInterfaces
+     * @param VirtualInterfaceEntity $virtualInterfaces
      */
-    public function removeVirtualInterface(\Entities\VirtualInterface $virtualInterfaces)
+    public function removeVirtualInterface( VirtualInterfaceEntity $virtualInterfaces)
     {
         $this->VirtualInterfaces->removeElement($virtualInterfaces);
     }
@@ -916,10 +1003,10 @@ class Customer
     /**
      * Add Contacts
      *
-     * @param Contact $contact
+     * @param ContactEntity $contact
      * @return Customer
      */
-    public function addContact(\Entities\Contact $contact)
+    public function addContact( ContactEntity $contact)
     {
         $this->Contacts[] = $contact;
 
@@ -929,9 +1016,9 @@ class Customer
     /**
      * Remove Contacts
      *
-     * @param Contact $contact
+     * @param ContactEntity $contact
      */
-    public function removeContact(\Entities\Contact $contact)
+    public function removeContact( ContactEntity $contact)
     {
         $this->Contacts->removeElement($contact);
     }
@@ -949,10 +1036,10 @@ class Customer
     /**
      * Add ConsoleServerConnections
      *
-     * @param ConsoleServerConnection $consoleServerConnection
+     * @param ConsoleServerConnectionEntity $consoleServerConnection
      * @return Customer
      */
-    public function addConsoleServerConnection(\Entities\ConsoleServerConnection $consoleServerConnection)
+    public function addConsoleServerConnection( ConsoleServerConnectionEntity $consoleServerConnection)
     {
         $this->ConsoleServerConnections[] = $consoleServerConnection;
 
@@ -962,9 +1049,9 @@ class Customer
     /**
      * Remove ConsoleServerConnections
      *
-     * @param ConsoleServerConnection $consoleServerConnection
+     * @param ConsoleServerConnectionEntity $consoleServerConnection
      */
-    public function removeConsoleServerConnection(\Entities\ConsoleServerConnection $consoleServerConnection)
+    public function removeConsoleServerConnection( ConsoleServerConnectionEntity $consoleServerConnection)
     {
         $this->ConsoleServerConnections->removeElement($consoleServerConnection);
     }
@@ -982,10 +1069,10 @@ class Customer
     /**
      * Add CustomerEquipment
      *
-     * @param CustomerEquipment $customerEquipment
+     * @param CustomerEquipmentEntity $customerEquipment
      * @return Customer
      */
-    public function addCustomerEquipment(\Entities\CustomerEquipment $customerEquipment)
+    public function addCustomerEquipment( CustomerEquipmentEntity $customerEquipment)
     {
         $this->CustomerEquipment[] = $customerEquipment;
 
@@ -995,9 +1082,9 @@ class Customer
     /**
      * Remove CustomerEquipment
      *
-     * @param CustomerEquipment $customerEquipment
+     * @param CustomerEquipmentEntity $customerEquipment
      */
-    public function removeCustomerEquipment(\Entities\CustomerEquipment $customerEquipment)
+    public function removeCustomerEquipment( CustomerEquipmentEntity $customerEquipment)
     {
         $this->CustomerEquipment->removeElement($customerEquipment);
     }
@@ -1015,10 +1102,11 @@ class Customer
     /**
      * Add Peers
      *
-     * @param Entities\PeeringManager $peers
+     * @param PeeringManagerEntity $peers
+     *
      * @return Customer
      */
-    public function addPeer(\Entities\PeeringManager $peers)
+    public function addPeer( PeeringManagerEntity $peers)
     {
         $this->Peers[] = $peers;
 
@@ -1028,9 +1116,9 @@ class Customer
     /**
      * Remove Peers
      *
-     * @param Entities\PeeringManager $peers
+     * @param PeeringManagerEntity $peers
      */
-    public function removePeer(\Entities\PeeringManager $peers)
+    public function removePeer( PeeringManagerEntity $peers)
     {
         $this->Peers->removeElement($peers);
     }
@@ -1038,7 +1126,7 @@ class Customer
     /**
      * Get Peers
      *
-     * @return Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getPeers()
     {
@@ -1048,10 +1136,10 @@ class Customer
     /**
      * Add PeersWith
      *
-     * @param Entities\PeeringManager $peersWith
+     * @param PeeringManagerEntity $peersWith
      * @return Customer
      */
-    public function addPeersWith(\Entities\PeeringManager $peersWith)
+    public function addPeersWith( PeeringManagerEntity $peersWith)
     {
         $this->PeersWith[] = $peersWith;
 
@@ -1061,9 +1149,9 @@ class Customer
     /**
      * Remove PeersWith
      *
-     * @param Entities\PeeringManager $peersWith
+     * @param PeeringManagerEntity $peersWith
      */
-    public function removePeersWith(\Entities\PeeringManager $peersWith)
+    public function removePeersWith( PeeringManagerEntity $peersWith)
     {
         $this->PeersWith->removeElement($peersWith);
     }
@@ -1071,7 +1159,7 @@ class Customer
     /**
      * Get PeersWith
      *
-     * @return Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getPeersWith()
     {
@@ -1081,10 +1169,10 @@ class Customer
     /**
      * Add XCusts
      *
-     * @param Entities\PeeringMatrix $xCusts
+     * @param PeeringMatrixEntity $xCusts
      * @return Customer
      */
-    public function addXCust(\Entities\PeeringMatrix $xCusts)
+    public function addXCust( PeeringMatrixEntity $xCusts)
     {
         $this->XCusts[] = $xCusts;
 
@@ -1094,9 +1182,9 @@ class Customer
     /**
      * Remove XCusts
      *
-     * @param Entities\PeeringMatrix $xCusts
+     * @param PeeringMatrixEntity $xCusts
      */
-    public function removeXCust(\Entities\PeeringMatrix $xCusts)
+    public function removeXCust( PeeringMatrixEntity $xCusts)
     {
         $this->XCusts->removeElement($xCusts);
     }
@@ -1104,7 +1192,7 @@ class Customer
     /**
      * Get XCusts
      *
-     * @return Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getXCusts()
     {
@@ -1114,10 +1202,10 @@ class Customer
     /**
      * Add YCusts
      *
-     * @param Entities\PeeringMatrix $yCusts
+     * @param PeeringMatrixEntity $yCusts
      * @return Customer
      */
-    public function addYCust(\Entities\PeeringMatrix $yCusts)
+    public function addYCust( PeeringMatrixEntity $yCusts)
     {
         $this->YCusts[] = $yCusts;
 
@@ -1127,9 +1215,9 @@ class Customer
     /**
      * Remove YCusts
      *
-     * @param Entities\PeeringMatrix $yCusts
+     * @param PeeringMatrixEntity $yCusts
      */
-    public function removeYCust(\Entities\PeeringMatrix $yCusts)
+    public function removeYCust( PeeringMatrixEntity $yCusts)
     {
         $this->YCusts->removeElement($yCusts);
     }
@@ -1137,7 +1225,7 @@ class Customer
     /**
      * Get YCusts
      *
-     * @return Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getYCusts()
     {
@@ -1147,10 +1235,10 @@ class Customer
     /**
      * Add Users
      *
-     * @param Entities\User $users
+     * @param UserEntity $users
      * @return Customer
      */
-    public function addUser(\Entities\User $users)
+    public function addUser( UserEntity $users)
     {
         $this->Users[] = $users;
 
@@ -1160,9 +1248,9 @@ class Customer
     /**
      * Remove Users
      *
-     * @param Entities\User $users
+     * @param UserEntity $users
      */
-    public function removeUser(\Entities\User $users)
+    public function removeUser( UserEntity $users)
     {
         $this->Users->removeElement($users);
     }
@@ -1180,7 +1268,7 @@ class Customer
     /**
      * Get Users
      *
-     * @return Doctrine\Common\Collections\Collection
+     * @return array
      */
     public function getUsersEmail()
     {
@@ -1194,10 +1282,10 @@ class Customer
     /**
      * Add Traffic95ths
      *
-     * @param Entities\Traffic95th $traffic95ths
+     * @param Traffic95thMonthlyEntity $traffic95ths
      * @return Customer
      */
-    public function addTraffic95th(\Entities\Traffic95th $traffic95ths)
+    public function addTraffic95th( Traffic95thMonthlyEntity $traffic95ths)
     {
         $this->Traffic95ths[] = $traffic95ths;
 
@@ -1207,9 +1295,9 @@ class Customer
     /**
      * Remove Traffic95ths
      *
-     * @param Entities\Traffic95th $traffic95ths
+     * @param Traffic95thMonthlyEntity $traffic95ths
      */
-    public function removeTraffic95th(\Entities\Traffic95th $traffic95ths)
+    public function removeTraffic95th( Traffic95thMonthlyEntity $traffic95ths)
     {
         $this->Traffic95ths->removeElement($traffic95ths);
     }
@@ -1217,7 +1305,7 @@ class Customer
     /**
      * Get Traffic95ths
      *
-     * @return Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getTraffic95ths()
     {
@@ -1227,10 +1315,10 @@ class Customer
     /**
      * Add Traffic95thMonthlys
      *
-     * @param Entities\Traffic95thMonthly $traffic95thMonthlys
+     * @param Traffic95thMonthlyEntity $traffic95thMonthlys
      * @return Customer
      */
-    public function addTraffic95thMonthly(\Entities\Traffic95thMonthly $traffic95thMonthlys)
+    public function addTraffic95thMonthly( Traffic95thMonthlyEntity $traffic95thMonthlys)
     {
         $this->Traffic95thMonthlys[] = $traffic95thMonthlys;
 
@@ -1240,9 +1328,9 @@ class Customer
     /**
      * Remove Traffic95thMonthlys
      *
-     * @param Entities\Traffic95thMonthly $traffic95thMonthlys
+     * @param Traffic95thMonthlyEntity $traffic95thMonthlys
      */
-    public function removeTraffic95thMonthly(\Entities\Traffic95thMonthly $traffic95thMonthlys)
+    public function removeTraffic95thMonthly(Traffic95thMonthlyEntity $traffic95thMonthlys)
     {
         $this->Traffic95thMonthlys->removeElement($traffic95thMonthlys);
     }
@@ -1250,7 +1338,7 @@ class Customer
     /**
      * Get Traffic95thMonthlys
      *
-     * @return Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getTraffic95thMonthlys()
     {
@@ -1260,10 +1348,10 @@ class Customer
     /**
      * Add TrafficDailies
      *
-     * @param Entities\TrafficDaily $trafficDailies
+     * @param TrafficDailyEntity $trafficDailies
      * @return Customer
      */
-    public function addTrafficDailie(\Entities\TrafficDaily $trafficDailies)
+    public function addTrafficDailie( TrafficDailyEntity $trafficDailies)
     {
         $this->TrafficDailies[] = $trafficDailies;
 
@@ -1273,9 +1361,9 @@ class Customer
     /**
      * Remove TrafficDailies
      *
-     * @param Entities\TrafficDaily $trafficDailies
+     * @param TrafficDailyEntity $trafficDailies
      */
-    public function removeTrafficDailie(\Entities\TrafficDaily $trafficDailies)
+    public function removeTrafficDailie( TrafficDailyEntity $trafficDailies)
     {
         $this->TrafficDailies->removeElement($trafficDailies);
     }
@@ -1283,18 +1371,12 @@ class Customer
     /**
      * Get TrafficDailies
      *
-     * @return Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getTrafficDailies()
     {
         return $this->TrafficDailies;
     }
-
-    /**
-     * @var string $noc24hphone
-     */
-    protected $noc24hphone;
-
 
     /**
      * Set noc24hphone
@@ -1339,7 +1421,7 @@ class Customer
         $ausers = [];
 
         foreach( $this->getUsers() as $u )
-            if( $u->getPrivs() == \Entities\User::AUTH_CUSTADMIN )
+            if( $u->isSuperUser() )
                 $ausers[] = $u;
 
         return $ausers;
@@ -1509,19 +1591,16 @@ class Customer
 
 
 
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    protected $RSPrefixes;
+
 
 
     /**
      * Add RSPrefixes
      *
-     * @param \Entities\RSPrefix $rSPrefixes
+     * @param RSPrefixEntity $rSPrefixes
      * @return Customer
      */
-    public function addRSPrefixes(\Entities\RSPrefix $rSPrefixes)
+    public function addRSPrefixes( RSPrefixEntity $rSPrefixes)
     {
         $this->RSPrefixes[] = $rSPrefixes;
 
@@ -1531,9 +1610,9 @@ class Customer
     /**
      * Remove RSPrefixes
      *
-     * @param \Entities\RSPrefix $rSPrefixes
+     * @param RSPrefixEntity $rSPrefixes
      */
-    public function removeRSPrefixes(\Entities\RSPrefix $rSPrefixes)
+    public function removeRSPrefixes( RSPrefixEntity $rSPrefixes)
     {
         $this->RSPrefixes->removeElement($rSPrefixes);
     }
@@ -1551,8 +1630,12 @@ class Customer
 
     /**
      * Is the customer a route server client on any of their VLAN interfaces?
+     *
      * @param int $proto One of [4,6]. Defaults to 4.
+     *
      * @return boolean
+     *
+     * @throws
      */
     public function isRouteServerClient( $proto = 4 )
     {
@@ -1575,8 +1658,12 @@ class Customer
 
     /**
      * Is the customer IPvX enabled on any of their VLAN interfaces?
+     *
      * @param int $proto One of [4,6]. Defaults to 4.
+     *
      * @return boolean
+     *
+     * @throws
      */
     public function isIPvXEnabled( $proto = 4 )
     {
@@ -1633,17 +1720,12 @@ class Customer
     }
 
     /**
-     * @var \Entities\IRRDBConfig
-     */
-    protected $IRRDB;
-
-    /**
      * Set IRRDB
      *
-     * @param \Entities\IRRDBConfig $iRRDB
+     * @param IRRDBConfigEntity $iRRDB
      * @return Customer
      */
-    public function setIRRDB(\Entities\IRRDBConfig $iRRDB = null)
+    public function setIRRDB( IRRDBConfigEntity $iRRDB = null)
     {
         $this->IRRDB = $iRRDB;
 
@@ -1653,17 +1735,12 @@ class Customer
     /**
      * Get IRRDB
      *
-     * @return \Entities\IRRDBConfig
+     * @return IRRDBConfigEntity
      */
     public function getIRRDB()
     {
         return $this->IRRDB;
     }
-
-    /**
-     * @var string
-     */
-    protected $peeringDb;
 
 
     /**
@@ -1689,18 +1766,14 @@ class Customer
         return $this->peeringDb;
     }
 
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    protected $Notes;
 
     /**
      * Add Notes
      *
-     * @param \Entities\CustomerNote $notes
+     * @param CustomerNoteEntity $notes
      * @return Customer
      */
-    public function addNote(\Entities\CustomerNote $notes)
+    public function addNote( CustomerNoteEntity $notes)
     {
         $this->Notes[] = $notes;
 
@@ -1710,9 +1783,9 @@ class Customer
     /**
      * Remove Notes
      *
-     * @param \Entities\CustomerNote $notes
+     * @param CustomerNoteEntity $notes
      */
-    public function removeNote(\Entities\CustomerNote $notes)
+    public function removeNote( CustomerNoteEntity $notes)
     {
         $this->Notes->removeElement($notes);
     }
@@ -1727,10 +1800,7 @@ class Customer
         return $this->Notes;
     }
 
-    /**
-     * @var string
-     */
-    protected $peeringmacrov6;
+
 
     /**
      * Set peeringmacrov6
@@ -1758,10 +1828,10 @@ class Customer
     /**
      * Set RegistrationDetails
      *
-     * @param \Entities\CompanyRegisteredDetail $registrationDetails
+     * @param CompanyRegisteredDetailEntity $registrationDetails
      * @return Customer
      */
-    public function setRegistrationDetails(\Entities\CompanyRegisteredDetail $registrationDetails)
+    public function setRegistrationDetails(CompanyRegisteredDetailEntity $registrationDetails)
     {
         $this->RegistrationDetails = $registrationDetails;
 
@@ -1771,7 +1841,7 @@ class Customer
     /**
      * Get RegistrationDetails
      *
-     * @return \Entities\CompanyRegisteredDetail
+     * @return CompanyRegisteredDetailEntity
      */
     public function getRegistrationDetails()
     {
@@ -1781,10 +1851,10 @@ class Customer
     /**
      * Set BillingDetails
      *
-     * @param \Entities\CompanyBillingDetail $billingDetails
+     * @param CompanyBillingDetailEntity $billingDetails
      * @return Customer
      */
-    public function setBillingDetails(\Entities\CompanyBillingDetail $billingDetails)
+    public function setBillingDetails( CompanyBillingDetailEntity $billingDetails)
     {
         $this->BillingDetails = $billingDetails;
 
@@ -1794,22 +1864,14 @@ class Customer
     /**
      * Get BillingDetails
      *
-     * @return \Entities\CompanyBillingDetail
+     * @return CompanyBillingDetailEntity
      */
     public function getBillingDetails()
     {
         return $this->BillingDetails;
     }
 
-    /**
-     * @var string
-     */
-    protected $abbreviatedName;
 
-    /**
-     * @var string
-     */
-    protected $MD5Support;
 
     /**
      * Set abbreviatedName
@@ -1856,21 +1918,6 @@ class Customer
     {
         return $this->MD5Support;
     }
-
-    /**
-     * @var boolean
-     */
-    protected $isReseller;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    protected $ResoldCustomers;
-
-    /**
-     * @var \Entities\Customer
-     */
-    protected $Reseller;
 
 
     /**
@@ -1919,10 +1966,10 @@ class Customer
     /**
      * Add ResoldCustomers
      *
-     * @param \Entities\Customer $resoldCustomers
+     * @param CustomerEntity $resoldCustomers
      * @return Customer
      */
-    public function addResoldCustomer(\Entities\Customer $resoldCustomers)
+    public function addResoldCustomer( CustomerEntity $resoldCustomers)
     {
         $this->ResoldCustomers[] = $resoldCustomers;
 
@@ -1932,9 +1979,9 @@ class Customer
     /**
      * Remove ResoldCustomers
      *
-     * @param \Entities\Customer $resoldCustomers
+     * @param CustomerEntity $resoldCustomers
      */
-    public function removeResoldCustomer(\Entities\Customer $resoldCustomers)
+    public function removeResoldCustomer( CustomerEntity $resoldCustomers)
     {
         $this->ResoldCustomers->removeElement($resoldCustomers);
     }
@@ -1952,10 +1999,10 @@ class Customer
     /**
      * Set Reseller
      *
-     * @param \Entities\Customer $reseller
+     * @param CustomerEntity $reseller
      * @return Customer
      */
-    public function setReseller(\Entities\Customer $reseller = null)
+    public function setReseller( CustomerEntity $reseller = null)
     {
         $this->Reseller = $reseller;
 
@@ -1965,7 +2012,7 @@ class Customer
     /**
      * Get Reseller
      *
-     * @return \Entities\Customer
+     * @return CustomerEntity
      */
     public function getReseller()
     {
@@ -1981,10 +2028,10 @@ class Customer
     /**
      * Add IrrdbPrefixes
      *
-     * @param \Entities\IrrdbPrefix $irrdbPrefixes
+     * @param  IrrdbPrefixEntity $irrdbPrefixes
      * @return Customer
      */
-    public function addIrrdbPrefixes(\Entities\IrrdbPrefix $irrdbPrefixes)
+    public function addIrrdbPrefixes( IrrdbPrefixEntity $irrdbPrefixes)
     {
         $this->IrrdbPrefixes[] = $irrdbPrefixes;
 
@@ -1994,9 +2041,9 @@ class Customer
     /**
      * Remove IrrdbPrefixes
      *
-     * @param \Entities\IrrdbPrefix $irrdbPrefixes
+     * @param IrrdbPrefixEntity $irrdbPrefixes
      */
-    public function removeIrrdbPrefixes(\Entities\IrrdbPrefix $irrdbPrefixes)
+    public function removeIrrdbPrefixes( IrrdbPrefixEntity $irrdbPrefixes)
     {
         $this->IrrdbPrefixes->removeElement($irrdbPrefixes);
     }
@@ -2033,7 +2080,10 @@ class Customer
      * @param int    $protocol One of 4 or 6 (defaults to 4)
      * @param string $asnPrefix A prefix for the ASN if no macro is present. See above.
      * @param bool   $nullIfNoMacro
+     *
      * @return The ASN / AS macro as appropriate
+     *
+     * @throws
      */
     public function resolveAsMacro( $protocol = 4, $asnPrefix = '', $nullIfNoMacro = false )
     {
@@ -2057,10 +2107,10 @@ class Customer
     /**
      * Add IrrdbPrefixes
      *
-     * @param \Entities\IrrdbPrefix $irrdbPrefixes
+     * @param IrrdbPrefixEntity $irrdbPrefixes
      * @return Customer
      */
-    public function addIrrdbPrefixe(\Entities\IrrdbPrefix $irrdbPrefixes)
+    public function addIrrdbPrefixe( IrrdbPrefixEntity $irrdbPrefixes)
     {
         $this->IrrdbPrefixes[] = $irrdbPrefixes;
 
@@ -2070,9 +2120,9 @@ class Customer
     /**
      * Remove IrrdbPrefixes
      *
-     * @param \Entities\IrrdbPrefix $irrdbPrefixes
+     * @param IrrdbPrefixEntity $irrdbPrefixes
      */
-    public function removeIrrdbPrefixe(\Entities\IrrdbPrefix $irrdbPrefixes)
+    public function removeIrrdbPrefixe( IrrdbPrefixEntity $irrdbPrefixes)
     {
         $this->IrrdbPrefixes->removeElement($irrdbPrefixes);
     }
@@ -2080,10 +2130,10 @@ class Customer
     /**
      * Add RSPrefixes
      *
-     * @param \Entities\RSPrefix $rSPrefixes
+     * @param RSPrefixEntity $rSPrefixes
      * @return Customer
      */
-    public function addRSPrefixe(\Entities\RSPrefix $rSPrefixes)
+    public function addRSPrefixe( RSPrefixEntity $rSPrefixes)
     {
         $this->RSPrefixes[] = $rSPrefixes;
 
@@ -2093,25 +2143,22 @@ class Customer
     /**
      * Remove RSPrefixes
      *
-     * @param \Entities\RSPrefix $rSPrefixes
+     * @param RSPrefixEntity $rSPrefixes
      */
-    public function removeRSPrefixe(\Entities\RSPrefix $rSPrefixes)
+    public function removeRSPrefixe( RSPrefixEntity $rSPrefixes)
     {
         $this->RSPrefixes->removeElement($rSPrefixes);
     }
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $IrrdbASNs;
+
 
 
     /**
      * Add IrrdbASNs
      *
-     * @param \Entities\IrrdbAsn $irrdbASNs
+     * @param IrrdbAsnEntity $irrdbASNs
      * @return Customer
      */
-    public function addIrrdbASN(\Entities\IrrdbAsn $irrdbASNs)
+    public function addIrrdbASN(IrrdbAsnEntity $irrdbASNs)
     {
         $this->IrrdbASNs[] = $irrdbASNs;
 
@@ -2121,9 +2168,9 @@ class Customer
     /**
      * Remove IrrdbASNs
      *
-     * @param \Entities\IrrdbAsn $irrdbASNs
+     * @param IrrdbAsnEntity $irrdbASNs
      */
-    public function removeIrrdbASN(\Entities\IrrdbAsn $irrdbASNs)
+    public function removeIrrdbASN(IrrdbAsnEntity $irrdbASNs)
     {
         $this->IrrdbASNs->removeElement($irrdbASNs);
     }
@@ -2189,10 +2236,10 @@ class Customer
     /**
      * Add IrrdbPrefixes
      *
-     * @param \Entities\IrrdbPrefix $irrdbPrefixes
+     * @param IrrdbPrefixEntity $irrdbPrefixes
      * @return Customer
      */
-    public function addIrrdbPrefix(\Entities\IrrdbPrefix $irrdbPrefixes)
+    public function addIrrdbPrefix( IrrdbPrefixEntity $irrdbPrefixes)
     {
         $this->IrrdbPrefixes[] = $irrdbPrefixes;
 
@@ -2202,9 +2249,9 @@ class Customer
     /**
      * Remove IrrdbPrefixes
      *
-     * @param \Entities\IrrdbPrefix $irrdbPrefixes
+     * @param IrrdbPrefixEntity $irrdbPrefixes
      */
-    public function removeIrrdbPrefix(\Entities\IrrdbPrefix $irrdbPrefixes)
+    public function removeIrrdbPrefix(IrrdbPrefixEntity $irrdbPrefixes)
     {
         $this->IrrdbPrefixes->removeElement($irrdbPrefixes);
     }
@@ -2212,10 +2259,10 @@ class Customer
     /**
      * Add RSPrefixes
      *
-     * @param \Entities\RSPrefix $rSPrefixes
+     * @param RSPrefixEntity $rSPrefixes
      * @return Customer
      */
-    public function addRSPrefix(\Entities\RSPrefix $rSPrefixes)
+    public function addRSPrefix( RSPrefixEntity $rSPrefixes)
     {
         $this->RSPrefixes[] = $rSPrefixes;
 
@@ -2225,9 +2272,9 @@ class Customer
     /**
      * Remove RSPrefixes
      *
-     * @param \Entities\RSPrefix $rSPrefixes
+     * @param RSPrefixEntity $rSPrefixes
      */
-    public function removeRSPrefix(\Entities\RSPrefix $rSPrefixes)
+    public function removeRSPrefix( RSPrefixEntity$rSPrefixes)
     {
         $this->RSPrefixes->removeElement($rSPrefixes);
     }
@@ -2235,10 +2282,10 @@ class Customer
     /**
      * Add TrafficDailies
      *
-     * @param \Entities\TrafficDaily $trafficDailies
+     * @param TrafficDailyEntity $trafficDailies
      * @return Customer
      */
-    public function addTrafficDaily(\Entities\TrafficDaily $trafficDailies)
+    public function addTrafficDaily(TrafficDailyEntity $trafficDailies)
     {
         $this->TrafficDailies[] = $trafficDailies;
 
@@ -2248,9 +2295,9 @@ class Customer
     /**
      * Remove TrafficDailies
      *
-     * @param \Entities\TrafficDaily $trafficDailies
+     * @param TrafficDailyEntity $trafficDailies
      */
-    public function removeTrafficDaily(\Entities\TrafficDaily $trafficDailies)
+    public function removeTrafficDaily(TrafficDailyEntity $trafficDailies)
     {
         $this->TrafficDailies->removeElement($trafficDailies);
     }
@@ -2283,21 +2330,14 @@ class Customer
         );
     }
 
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $logos;
-
-
     /**
      * Add logo
      *
-     * @param \Entities\Logo $logo
+     * @param LogoEntity $logo
      *
      * @return Customer
      */
-    public function addLogo(\Entities\Logo $logo)
+    public function addLogo( LogoEntity $logo)
     {
         $this->logos[] = $logo;
 
@@ -2307,9 +2347,9 @@ class Customer
     /**
      * Remove logo
      *
-     * @param \Entities\Logo $logo
+     * @param LogoEntity $logo
      */
-    public function removeLogo(\Entities\Logo $logo)
+    public function removeLogo( LogoEntity $logo)
     {
         $this->logos->removeElement($logo);
     }
@@ -2327,7 +2367,7 @@ class Customer
     /**
      * Get logo of a specific type
      *
-     * @return \Entities\Logo
+     * @return LogoEntity
      */
     public function getLogo($type)
     {
@@ -2350,11 +2390,11 @@ class Customer
     /**
      * Add patchPanelPort
      *
-     * @param \Entities\PatchPanelPort $patchPanelPort
+     * @param PatchPanelPortEntity $patchPanelPort
      *
      * @return Customer
      */
-    public function addPatchPanelPort(\Entities\PatchPanelPort $patchPanelPort){
+    public function addPatchPanelPort( PatchPanelPortEntity $patchPanelPort){
         $this->patchPanelPorts[] = $patchPanelPort;
 
         return $this;
@@ -2363,9 +2403,9 @@ class Customer
     /**
      * Remove patchPanelPort
      *
-     * @param \Entities\PatchPanelPort $patchPanelPort
+     * @param PatchPanelPortEntity $patchPanelPort
      */
-    public function removePatchPanelPort(\Entities\PatchPanelPort $patchPanelPort){
+    public function removePatchPanelPort( PatchPanelPortEntity $patchPanelPort){
         $this->patchPanelPorts->removeElement($patchPanelPort);
     }
 
@@ -2413,10 +2453,10 @@ class Customer
     /**
      * Add tag
      *
-     * @param \Entities\CustomerTag $tag
+     * @param CustomerTagEntity $tag
      * @return Customer
      */
-    public function addTag(CustomerTag $tag)
+    public function addTag(CustomerTagEntity $tag)
     {
         $this->tags[] = $tag;
 
@@ -2426,9 +2466,9 @@ class Customer
     /**
      * Remove tag
      *
-     * @param \Entities\CustomerTag $tag
+     * @param CustomerTagEntity $tag
      */
-    public function removeTag(CustomerTag $tag)
+    public function removeTag(CustomerTagEntity $tag)
     {
         $this->tags->removeElement($tag);
     }

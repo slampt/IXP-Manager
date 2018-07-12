@@ -9,9 +9,7 @@
     <ul class="nav nav-tabs">
         <li class="active">
             <a href="#tab1" data-toggle="tab">Overview</a></li>
-            {if $multiIXP}
-                <li><a href="#tab-ixps" data-toggle="tab">IXPs</a></li>
-            {/if}
+
             <li><a href="#tab-details" data-toggle="tab">My Details</a></li>
             <li><a href="#tab3" data-toggle="tab">Ports</a></li>
 
@@ -62,13 +60,6 @@
             <!-- Overview Tab -->
             {tmplinclude file="dashboard/index-tabs/overview.phtml"}
         </div>
-
-        {if $multiIXP}
-            <div class="tab-pane" id="tab-ixps">
-                {tmplinclude file="dashboard/index-tabs/ixps.phtml"}
-
-            </div>
-        {/if}
 
         <div class="tab-pane" id="tab-details">
             <!-- Details Tab -->

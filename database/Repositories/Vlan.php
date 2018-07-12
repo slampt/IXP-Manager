@@ -90,7 +90,7 @@ class Vlan extends EntityRepository
 
      * @return array An array of all VLAN names with the vlan id as the key.
      */
-    public function getNames( $type = self::TYPE_NORMAL, $ixp = false )
+    public function getNames( $type = self::TYPE_NORMAL  )
     {
         $vlans = [];
         foreach( $this->getAndCache( $type ) as $a ) {

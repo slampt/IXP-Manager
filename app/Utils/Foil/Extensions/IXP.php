@@ -55,7 +55,6 @@ class IXP implements ExtensionInterface {
             'asNumber'              => [ $this, 'asNumber' ],
             'logoManagementEnabled' => [ $this, 'logoManagementEnabled' ],
             'maxFileUploadSize'     => [ $this, 'maxFileUploadSize' ],
-            'multiIXP'              => [ $this, 'multiIXP' ],
             'nagiosHostname'        => [ $this, 'nagiosHostname' ],
             'resellerMode'          => [ $this, 'resellerMode' ],
             'scaleBits'             => [ $this, 'scaleBits' ],
@@ -262,23 +261,6 @@ class IXP implements ExtensionInterface {
     public function logoManagementEnabled()
     {
         return !boolval( config( 'ixp_fe.frontend.disabled.logo' ) );
-    }
-
-    /**
-     * Checks if multi IXP mode is enabled.
-     *
-     * To enable multi IXP mode set the env variable IXP_MULTIIXP_ENABLED
-     *
-     * NB: this functionality is deprecated in IXP Manager v4.0 and will be
-     * removed piecemeal.
-     *
-     * @see https://github.com/inex/IXP-Manager/wiki/Multi-IXP-Functionality
-     *
-     * @return bool
-     */
-    public function multiIXP(): bool
-    {
-        return boolval( config( 'ixp.multiixp.enabled', false ) );
     }
 
     /**

@@ -518,34 +518,18 @@ class SwitchController extends IXP_Controller_FrontEnd
     public function configurationAction()
     {
         $superuser = $this->getUser()->getPrivs() == \Entities\User::AUTH_SUPERUSER;
-        if( $this->getParam( 'ixp', false ) )
-        {
-            $this->view->ixp = $ixp = null;
-            if( !$superuser && !$this->getUser()->getCustomer()->getIXPs()->contains( $ixp ) )
-                $this->redirectAndEnsureDie( '/erro/insufficient-permissions' );
-        }
-        else if( !$superuser )
-            $this->view->ixp = $ixp = $this->getUser()->getCustomer()->getIXPs()[0];
-        else
-        {
-            $ixp = null;
-            if( $ixp )
-                $this->view->ixp = $ixp = $ixp[0];
-            else
-                $ixp = false;
-        }
+
 
         $this->view->registerClass( 'PHYSICALINTERFACE', '\\Entities\\PhysicalInterface' );
         $this->view->states   = \Entities\PhysicalInterface::$STATES;
-        $this->view->ixps     = $ixps     = null;
-        $this->view->vlans    = $vlans    = $this->getD2R( '\\Entities\\Vlan'     )->getNames( 1, $ixp );
-        $this->view->switches = $switches = $this->getD2R( '\\Entities\\Switcher' )->getNames( false, 0, $ixp );
+
+        $this->view->vlans    = $vlans    = $this->getD2R( '\\Entities\\Vlan'     )->getNames( 1 );
+        $this->view->switches = $switches = $this->getD2R( '\\Entities\\Switcher' )->getNames( false, 0 );
 
         $this->view->switchid = $sid   = ( $this->getParam( 'sid', false ) && isset( $switches[ $this->getParam( 'sid' ) ] ) ) ? $this->getParam( 'sid' ) : null;
         $this->view->vlanid   = $vid   = ( $this->getParam( 'vid', false ) && isset( $vlans[    $this->getParam( 'vid' ) ] ) ) ? $this->getParam( 'vid' ) : null;
-        $this->view->ixpid    = $ixpid = $ixp ? $ixp->getId() : null;
 
-        $this->view->config = $this->getD2EM()->getRepository( '\\Entities\\Switcher' )->getConfiguration( $sid, $vid, $ixpid, $superuser );
+        $this->view->config = $this->getD2EM()->getRepository( '\\Entities\\Switcher' )->getConfiguration( $sid, $vid, $superuser );
     }
 
 

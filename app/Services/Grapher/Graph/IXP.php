@@ -24,10 +24,9 @@
 use IXP\Services\Grapher;
 use IXP\Services\Grapher\{Graph};
 
-use Entities\IXP  as IXPEntity;
 use Entities\User as UserEntity;
 
-use Auth, D2EM;
+use Auth;
 
 /**
  * Grapher -> Abstract Graph

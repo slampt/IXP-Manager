@@ -47,19 +47,6 @@ trait IXP_Controller_Trait_Common
         return boolval( config( 'ixp.reseller.enabled', false ) );
     }
 
-    /**
-     * Checks if multi IXP mode is enabled.
-     *
-     * To enable multi IXP mode set the env variable IXP_MULTIIXP_ENABLED
-     *
-     * @see https://github.com/inex/IXP-Manager/wiki/Multi-IXP-Functionality
-     *
-     * @return bool
-     */
-    protected function multiIXP(): bool
-    {
-        return boolval( config( 'ixp.multiixp.enabled', false ) );
-    }
 
     /**
      * Checks if as112 is activated in the UI.
