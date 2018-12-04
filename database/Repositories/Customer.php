@@ -2,6 +2,8 @@
 
 namespace Repositories;
 
+use D2EM;
+
 use Doctrine\ORM\EntityRepository;
 use Exception;
 
