@@ -37,6 +37,7 @@ use Illuminate\Http\{
 use Illuminate\View\View;
 
 use Entities\{
+    BgpSession              as BgpSessionEntity,
     CompanyBillingDetail    as CompanyBillingDetailEntity,
     CompanyRegisteredDetail as CompanyRegisteredDetailEntity,
     Customer                as CustomerEntity,
@@ -45,7 +46,8 @@ use Entities\{
     IRRDBConfig             as IRRDBConfigEntity,
     NetworkInfo             as NetworkInfoEntity,
     RSPrefix                as RSPrefixEntity,
-    User                    as UserEntity
+    User                    as UserEntity,
+    Vlan                    as VlanEntity
 };
 
 
@@ -246,7 +248,7 @@ class CustomerController extends Controller
         $c->setMD5Support(           $r->input( 'md5support'           ) );
         $c->setAbbreviatedName(      $r->input( 'abbreviatedName'      ) );
         $c->setDatejoin(  $r->input( 'datejoin'                  )  ? new \DateTime( $r->input( 'datejoin'    ) ) : null );
-        $c->setDateleave($r->input( 'dateleave'                 )  ? new \DateTime( $r->input( 'dateleave'   ) ) : null );
+        $c->setDateleave($r->input( 'dateleft'                 )  ? new \DateTime( $r->input( 'dateleft'   ) ) : null );
 
         $c->setAutsys(               $r->input( 'autsys'               ) );
         $c->setMaxprefixes(          $r->input( 'maxprefixes'          ) );
@@ -342,7 +344,7 @@ class CustomerController extends Controller
                 'billingAddress3'           => array_key_exists( 'billingAddress3',         $old    ) ? $old['billingAddress3']         : $cbd->getBillingAddress3(),
                 'billingTownCity'           => array_key_exists( 'billingTownCity',         $old    ) ? $old['billingTownCity']         : $cbd->getBillingTownCity(),
                 'billingPostcode'           => array_key_exists( 'billingPostcode',         $old    ) ? $old['billingPostcode']         : $cbd->getBillingPostcode(),
-                'billingCountry'            => array_key_exists( 'billingCountry',          $old    ) ? $old['billingCountry']          : $cbd->getBillingCountry(),
+                'billingCountry'            => array_key_exists( 'billingCountry',          $old    ) ? $old['billingCountry']          : in_array( $cbd->getBillingCountry(),  array_values( Countries::getListForSelect( 'iso_3166_2' ) ) ) ? $cbd->getBillingCountry() : null,
                 'billingEmail'              => array_key_exists( 'billingEmail',            $old    ) ? $old['billingEmail']            : $cbd->getBillingEmail(),
                 'billingTelephone'          => array_key_exists( 'billingTelephone',        $old    ) ? $old['billingTelephone']        : $cbd->getBillingTelephone(),
                 'purchaseOrderRequired'     => array_key_exists( 'purchaseOrderRequired',   $old    ) ? $old['purchaseOrderRequired']   : ( $cbd->getPurchaseOrderRequired() ? 1 : 0 ),
@@ -362,8 +364,9 @@ class CustomerController extends Controller
             'address3'                  => array_key_exists( 'address3',                        $old    ) ? $old['address3']        : $crd->getAddress3(),
             'townCity'                  => array_key_exists( 'townCity',                        $old    ) ? $old['townCity']        : $crd->getTownCity(),
             'postcode'                  => array_key_exists( 'postcode',                        $old    ) ? $old['postcode']        : $crd->getPostcode(),
-            'country'                   => array_key_exists( 'country',                         $old    ) ? $old['country']         : $crd->getCountry(),
+            'country'                   => array_key_exists( 'country',                         $old    ) ? $old['country']         : in_array( $crd->getCountry(),  array_values( Countries::getListForSelect( 'iso_3166_2' ) ) ) ? $crd->getCountry() : null,
         ];
+
 
         Former::populate( array_merge( $dataRegistrationDetail, $dataBillingDetail ) );
 
@@ -492,6 +495,19 @@ class CustomerController extends Controller
         // get customer's notes
         $cns = D2EM::getRepository( CustomerNoteEntity::class )->fetchForCustomer( $c );
 
+        $peersStatus = [];
+
+        foreach( $c->getVirtualInterfaces() as $vi ) {
+            foreach( $vi->getVlanInterfaces() as $vli ) {
+                if( $vli->getVlan()->getPrivate() ) {
+                    continue;
+                }
+                
+                $peersStatus[ $vli->getId() ][] = D2EM::getRepository( BgpSessionEntity::class )->getPeersStatus( $vli );
+            }
+        }
+
+
         return view( 'customer/overview' )->with([
             'c'                         => $c,
             'customers'                 => D2EM::getRepository( CustomerEntity::class )->getNames( true ),
@@ -515,7 +531,8 @@ class CustomerController extends Controller
             'countries'                 => Countries::getList('name' ),
             'tab'                       => strtolower( $tab ),
             'notes'                     => $cns,
-            'notesInfo'                 => D2EM::getRepository( CustomerNoteEntity::class )->analyseForUser( $cns, $c, Auth::user() )
+            'notesInfo'                 => D2EM::getRepository( CustomerNoteEntity::class )->analyseForUser( $cns, $c, Auth::user() ),
+            'peers'                     => D2EM::getRepository( CustomerEntity::class )->getPeeringManagerArrayByType( $c , D2EM::getRepository( VlanEntity::class )->getPeeringManagerVLANs(), [ 4, 6 ] )
         ]);
     }
 

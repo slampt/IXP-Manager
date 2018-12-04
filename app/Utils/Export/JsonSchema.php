@@ -202,7 +202,7 @@ class JsonSchema
 
         /** @var SwitcherEntity $switch */
         foreach( $infra->getSwitchers() as $switch ) {
-            if( $switch->getSwitchtype() != SwitcherEntity::TYPE_SWITCH || !$switch->getActive() ) {
+            if( !$switch->getActive() ) {
                 continue;
             }
 

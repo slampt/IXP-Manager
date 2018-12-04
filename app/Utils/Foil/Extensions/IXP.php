@@ -44,11 +44,11 @@ class IXP implements ExtensionInterface {
         $this->args = $args;
     }
 
-    public function provideFilters() {
+    public function provideFilters(): array {
        return [];
     }
 
-    public function provideFunctions() {
+    public function provideFunctions(): array {
         return [
             'alerts'                => [ AlertContainer::class, 'html' ],
             'as112UiActive'         => [ $this, 'as112UiActive' ],
@@ -72,19 +72,19 @@ class IXP implements ExtensionInterface {
      *
      * Inspired by: http://stackoverflow.com/questions/13076480/php-get-actual-maximum-upload-size
      */
-    public function maxFileUploadSize() {
+    public function maxFileUploadSize(): string {
         static $max_size = null;
 
         $parseSize = function( $size ) {
-            $unit = preg_replace('/[^bkmgtpezy]/i', '', $size); // Remove the non-unit characters from the size.
-            $size = preg_replace('/[^0-9\.]/', '', $size);      // Remove the non-numeric characters from the size.
-            if ($unit) {
+            $unit = preg_replace( '/[^bkmgtpezy]/i', '', $size ); // Remove the non-unit characters from the size.
+            $size = preg_replace( '/[^0-9\.]/',      '', $size ); // Remove the non-numeric characters from the size.
+
+            if( $unit ) {
                 // Find the position of the unit in the ordered string which is the power of magnitude to multiply a kilobyte by.
-                return round( $size * pow( 1024, stripos( 'bkmgtpezy', $unit[0] ) ) );
+                return round( $size * ( 1024 ** stripos( 'bkmgtpezy', $unit[0] ) ) );
             }
-            else {
-                return round($size);
-            }
+
+            return round( $size );
         };
 
         if( $max_size === null ) {
@@ -97,6 +97,7 @@ class IXP implements ExtensionInterface {
                 $max_size = $upload_max;
             }
         }
+
         return $this->scale( $max_size, 'bytes' );
     }
 
@@ -125,32 +126,35 @@ class IXP implements ExtensionInterface {
      * @return string            Scaled / formatted number / type.
      */
     private function scale( float $v, string $format, int $decs = 3, int $returnType = 0 ): string {
-        if( $format == "bytes" ) {
+        if( $format === 'bytes' ) {
             $formats = [
-                "Bytes", "KBytes", "MBytes", "GBytes", "TBytes"
+                'Bytes', 'KBytes', 'MBytes', 'GBytes', 'TBytes'
             ];
-        } else if( in_array( $format, [ 'pkts', 'errs', 'discs', 'bcasts' ] ) ) {
+        } else if( \in_array( $format, [ 'pkts', 'errs', 'discs', 'bcasts' ] ) ) {
             $formats = [
-                "pps", "Kpps", "Mpps", "Gpps", "Tpps"
+                'pps', 'Kpps', 'Mpps', 'Gpps', 'Tpps'
             ];
         } else {
             $formats = [
-                "bits", "Kbits", "Mbits", "Gbits", "Tbits"
+                'bits', 'Kbits', 'Mbits', 'Gbits', 'Tbits'
             ];
         }
 
-        for( $i = 0; $i < sizeof( $formats ); $i++ )
-        {
-            if( ( $v / 1000.0 < 1.0 ) || ( sizeof( $formats ) == $i + 1 ) ) {
-                if( $returnType == 0 )
-                    return number_format( $v, $decs ) . " " . $formats[$i];
-                elseif( $returnType == 1 )
+        $num_formats = \count( $formats );
+        for( $i = 0; $i < $num_formats; $i++ ) {
+            if( ( $v / 1000.0 < 1.0 ) || ( $num_formats === $i + 1 ) ) {
+                if( $returnType === 0 ) {
+                    return number_format( $v, $decs ) . ' ' . $formats[ $i ];
+                }
+
+                if( $returnType === 1 ) {
                     return number_format( $v, $decs );
-                else
-                    return $formats[$i];
-            } else {
-                $v /= 1000.0;
+                }
+
+                return $formats[ $i ];
             }
+
+            $v /= 1000.0;
         }
 
         return (string)$v;
@@ -162,7 +166,7 @@ class IXP implements ExtensionInterface {
      * @param int $decs
      * @return string
      */
-    public function scaleBits( float $v, int $decs = 3 ) {
+    public function scaleBits( float $v, int $decs = 3 ): string {
         return $this->scale( $v, 'bits', $decs );
     }
 
@@ -172,7 +176,7 @@ class IXP implements ExtensionInterface {
      * @param int $decs
      * @return string
      */
-    public function scaleBytes( float $v, int $decs = 3 ) {
+    public function scaleBytes( float $v, int $decs = 3 ): string {
         return $this->scale( $v, 'bytes', $decs );
     }
 
@@ -192,25 +196,25 @@ class IXP implements ExtensionInterface {
     * @return string            Scaled / formatted number / type.
     */
     public function softwrap( array $data, int $perline, string $elementSeparator, string $lineEnding, int $indent = 0 ): string {
-        if( !( $cnt = count( $data ) ) ) {
-            return "";
+        if( !( $cnt = \count( $data ) ) ) {
+            return '';
         }
 
         $itrn = 0;
-        $str  = "";
+        $str  = '';
 
         foreach( $data as $d ) {
-            if( $itrn == $cnt ) {
+            if( $itrn === $cnt ) {
                 break;
             }
 
             $str .= $d;
 
-            if( $itrn == 0 && $cnt > 1 && $perline == 1 ) {
+            if( $itrn === 0 && $cnt > 1 && $perline === 1 ) {
                 $str .= $lineEnding . "\n" . str_repeat(' ', $indent);
-            } else if( ($itrn+1) != $cnt && ($itrn+1) % $perline != 0 ) {
+            } else if( ($itrn+1) !== $cnt && ($itrn+1) % $perline !== 0 ) {
                 $str .= $elementSeparator;
-            } else if( $itrn > 0 && ($itrn+1) != $cnt && ($itrn+1) % $perline == 0 ) {
+            } else if( $itrn > 0 && ($itrn+1) !== $cnt && ($itrn+1) % $perline == 0 ) {
                 $str .= $lineEnding . "\n" . str_repeat( ' ', $indent );
             }
 
@@ -231,7 +235,7 @@ class IXP implements ExtensionInterface {
      * @param int    $vliid           VLAN Interface ID
      * @return string
      */
-    public function nagiosHostname( string $abbreviatedName, int $asn, int $protocol, int $vlanid, int $vliid ) {
+    public function nagiosHostname( string $abbreviatedName, int $asn, int $protocol, int $vlanid, int $vliid ): string {
         return preg_replace( '/[^a-zA-Z0-9]/', '-', strtolower( $abbreviatedName ) ) . '-as' . $asn . '-ipv' . $protocol . '-vlanid' . $vlanid . '-vliid' . $vliid;
     }
 
@@ -248,7 +252,7 @@ class IXP implements ExtensionInterface {
      */
     public function resellerMode(): bool
     {
-        return boolval( config( 'ixp.reseller.enabled', false ) );
+        return (bool)config( 'ixp.reseller.enabled', false );
     }
 
     /**
@@ -258,9 +262,9 @@ class IXP implements ExtensionInterface {
      *
      * @return bool
      */
-    public function logoManagementEnabled()
+    public function logoManagementEnabled(): bool
     {
-        return !boolval( config( 'ixp_fe.frontend.disabled.logo' ) );
+        return !(bool)config( 'ixp_fe.frontend.disabled.logo' );
     }
 
     /**
@@ -274,7 +278,7 @@ class IXP implements ExtensionInterface {
      */
     public function as112UiActive(): bool
     {
-        return boolval( config( 'ixp.as112.ui_active', false ) );
+        return (bool)config( 'ixp.as112.ui_active', false );
     }
 
     /**
@@ -284,10 +288,13 @@ class IXP implements ExtensionInterface {
      * @param  bool   $addAs    Do we need to add AS?
      * @return string
      */
-    public function asNumber( int $asn, $addAs = true )
+    public function asNumber( $asn, $addAs = true )
     {
-        return '<a href="#ixpm-asnumber-' . $asn . '" onClick="ixpAsnumber( ' . $asn . ' ); return false;">' . ( $addAs ? 'AS' : '' ) . $asn . '</a>';
-    }
+        if( $asn ) {
+            return '<a href="#ixpm-asnumber-' . $asn . '" onClick="ixpAsnumber( ' . $asn . ' ); return false;">' . ( $addAs ? 'AS' : '' ) . $asn . '</a>';
+        }
 
+        return ( $addAs ? 'AS' : '' ) . $asn;
+    }
 
 }

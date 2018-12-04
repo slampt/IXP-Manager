@@ -5,13 +5,13 @@ namespace Repositories;
 use D2EM;
 
 use Doctrine\ORM\EntityRepository;
+
 use Entities\{
     CoreBundle      as CoreBundleEntity,
     Infrastructure  as InfrastructureEntity,
     Switcher        as SwitcherEntity
 
 };
-
 
 /**
  * Switcher
@@ -55,11 +55,10 @@ class Switcher extends EntityRepository
      * Clear the cache of a given result set
      *
      * @param bool $active If `true`, return only active switches
-     * @param int $type If `0`, all types otherwise limit to specific type
      *
      * @return bool
      */
-    public function clearCache( $active = false, $type = 0 )
+    public function clearCache( $active = false )
     {
         return $this->getEntityManager()->getConfiguration()->getQueryCacheImpl()->delete(
             $this->genCacheKey( $active )
@@ -72,11 +71,9 @@ class Switcher extends EntityRepository
     public function clearCacheAll()
     {
         foreach( [ true, false ] as $active ) {
-            foreach( SwitcherEntity::$TYPES as $type => $name ) {
-                $this->getEntityManager()->getConfiguration()->getQueryCacheImpl()->delete(
-                    $this->genCacheKey( $active )
-                );
-            }
+            $this->getEntityManager()->getConfiguration()->getQueryCacheImpl()->delete(
+                $this->genCacheKey( $active )
+            );
         }
     }
 
@@ -86,7 +83,7 @@ class Switcher extends EntityRepository
      * @param bool $active If `true`, return only active switches
      * @return string The generate caching key
      */
-    public function genCacheKey( $active )
+    public function genCacheKey( $active  )
     {
         $key = self::ALL_CACHE_KEY;
 
@@ -103,18 +100,13 @@ class Switcher extends EntityRepository
      * Return an array of all switch names where the array key is the switch id
      *
      * @param bool          $active If `true`, return only active switches
-     * @param int           $type   If `0`, all types otherwise limit to specific type
      * @return array An array of all switch names with the switch id as the key.
      */
-    public function getNames( $active = false, $type = 0 )
+    public function getNames( $active = false )
     {
         $switches = [];
-        foreach( $this->getAndCache( $active, $type ) as $a )
-        {
-            if( in_array( $a->getInfrastructure(), D2EM::getRepository( InfrastructureEntity::class )->findAll() ) ){
-                $switches[ $a->getId() ] = $a->getName();
-            }
-
+        foreach( $this->getAndCache( $active ) as $a ) {
+            $switches[ $a->getId() ] = $a->getName();
         }
 
         asort( $switches );
@@ -124,15 +116,51 @@ class Switcher extends EntityRepository
     /**
      * Return an array of all switch names where the array key is the switch id
      *
-     * @param bool          $active If `true`, return only active switches
-     * @param int           $type   If `0`, all types otherwise limit to specific type
-     * @param int           $idLocation  location requiered
+     * @param \Entities\Infrastructure      $infra
+     * @param \Entities\Location            $location
+
      * @return array An array of all switch names with the switch id as the key.
      */
-    public function getNamesByLocation( $active = false, $type = 0, $idLocation = null )
+    public function getByLocationAndInfrastructure( $infra = null, $location = null ){
+        $q = "SELECT s
+
+            FROM \\Entities\\Switcher s";
+
+        if( $location !== null ){
+            $q .= " LEFT JOIN s.Cabinet cab";
+        }
+
+
+        $q .= " WHERE 1=1 ";
+
+        if( $infra )
+            $q .= 'AND s.Infrastructure = ' .  $infra->getId() . ' ';
+
+        if( $location )
+            $q .= 'AND cab.Location = ' . $location->getId() . ' ';
+
+        $q .= 'AND s.active = 1 ';
+
+
+        $q .= " ORDER BY s.name ASC";
+
+        $query = $this->getEntityManager()->createQuery( $q );
+
+        return $query->getResult();
+    }
+
+    /**
+     * Return an array of all switch names where the array key is the switch id
+     *
+     * @param bool          $active If `true`, return only active switches
+     * @param int           $idLocation  location requiered
+     *
+     * @return array An array of all switch names with the switch id as the key.
+     */
+    public function getNamesByLocation( $active = false, $idLocation = null )
     {
         $switches = [];
-        foreach( $this->getAndCache( $active, $type ) as $a ) {
+        foreach( $this->getAndCache( $active ) as $a ) {
 
             if($idLocation != null)
                 if($a->getCabinet()->getLocation()->getId() == $idLocation)
@@ -147,18 +175,22 @@ class Switcher extends EntityRepository
     /**
      * Return an array of configurations
      *
-     * @param int $switchid Switcher id for filtering results
-     * @param int $vlanid   Vlan id for filtering results
+     * @param int   $switchid     Switcher id for filtering results
+     * @param int   $vlanid       Vlan id for filtering results
+     * @param int   $ixpid        IXP id for filtering results
+     * @param bool  $superuser    Does the user is super user ?
+     * @param int   $infra        Infrastructure id for filtering results
+     * @param int   $facility     Facility id for filtering results
+     *
      * @return array
      */
-    public function getConfiguration( $switchid = null, $vlanid = null, $superuser = true )
+    public function getConfiguration( $switchid = null, $vlanid = null, $ixpid = null, $superuser = true, $infra = null, $facility = null )
     {
         $q =
             "SELECT s.name AS switchname, 
-                    s.id AS switchid,
-                    sp.name AS portname, 
-                    sp.ifName AS ifName,
-                    pi.speed AS speed, 
+                    s.id AS switchid,                    
+                    GROUP_CONCAT(  sp.ifName ) AS ifName,
+                    GROUP_CONCAT( pi.speed ) AS speed, 
                     pi.duplex AS duplex, 
                     pi.status AS portstatus,
                     c.name AS customer, 
@@ -166,8 +198,9 @@ class Switcher extends EntityRepository
                     c.autsys AS asn,
                     vli.rsclient AS rsclient,
                     v.name AS vlan,
-                    ipv4.address AS ipv4address, 
-                    ipv6.address AS ipv6address
+                    GROUP_CONCAT( DISTINCT ipv4.address ) AS ipv4address, 
+                    GROUP_CONCAT( DISTINCT ipv6.address ) AS ipv6address
+
 
             FROM \\Entities\\VlanInterface vli
                 JOIN vli.IPv4Address ipv4
@@ -180,6 +213,7 @@ class Switcher extends EntityRepository
                 LEFT JOIN sp.Switcher s
                 LEFT JOIN v.Infrastructure vinf
                 LEFT JOIN s.Infrastructure sinf
+                LEFT JOIN s.Cabinet cab
 
             WHERE 1=1 ";
 
@@ -189,9 +223,28 @@ class Switcher extends EntityRepository
         if( $vlanid !== null )
             $q .= 'AND v.id = ' . intval( $vlanid ) . ' ';
 
-        $q .= "ORDER BY customer ASC";
+
+        if( $ixpid !== null )
+            $q .= 'AND ( sixp.id = ' . intval( $ixpid ) . ' OR vixp.id = ' . intval( $ixpid ) . ' ) ';
+
+        if( !$superuser && $ixpid )
+            $q .= 'AND ?1 MEMBER OF c.IXPs ';
+
+        if( $infra !== null )
+            $q .= 'AND sinf.id = ' . intval( $infra ) . ' ';
+
+        if( $facility !== null )
+            $q .= 'AND cab.Location = ' . intval( $facility ) . ' ';
+
+
+        $q .= " GROUP BY switchname, switchid, duplex, portstatus, customer, custid, asn, rsclient, vlan ";
+
+        $q .= " ORDER BY customer ASC";
 
         $query = $this->getEntityManager()->createQuery( $q );
+
+        if( !$superuser && $ixpid )
+            $query->setParameter( 1, $ixpid );
 
         return $query->getArrayResult();
     }
@@ -202,8 +255,7 @@ class Switcher extends EntityRepository
      *
      * @return array
      */
-    public function getActive()
-    {
+    public function getActive(){
         $q = "SELECT s FROM \\Entities\\Switcher s WHERE s.active = 1";
         return $this->getEntityManager()->createQuery( $q )->getResult();
     }
@@ -440,9 +492,12 @@ class Switcher extends EntityRepository
      */
     public function getAllPorts( int $id, $types = [], $spid = [], bool $notAssignToPI = true ): array {
 
-        $dql = "SELECT sp.name AS name, sp.type AS type, sp.id AS id
-                    FROM Entities\\SwitchPort sp
-                    LEFT JOIN sp.Switcher s";
+        $dql = "SELECT  sp.name AS name, 
+                        sp.type AS type, 
+                        sp.id AS id, 
+                        sp.type AS porttype
+                FROM Entities\\SwitchPort sp
+                LEFT JOIN sp.Switcher s";
 
         if( $notAssignToPI ){
             $dql .= " LEFT JOIN sp.PhysicalInterface pi";
@@ -454,7 +509,7 @@ class Switcher extends EntityRepository
             $dql .= " AND pi.id IS NULL ";
         }
 
-        if( count( $spid ) > 0 ){
+        if( $spid != null && count( $spid ) > 0 ){
             $dql .= ' AND sp.id NOT IN ('.implode( ',', $spid ).') ';
         }
 
@@ -471,6 +526,40 @@ class Switcher extends EntityRepository
 
         foreach( $ports as $id => $port )
             $ports[$id]['type'] = \Entities\SwitchPort::$TYPES[ $port['type'] ];
+
+        return $ports;
+    }
+
+    /**
+     * Returns all switch ports assigned to a physical interface for a switch.
+     *
+     * @param int      $id     Switch ID - switch to query
+     *
+     * @return array
+     */
+    public function getAllPortsAssignedToPI( int $id ): array {
+
+        $dql = "SELECT  sp.id AS id, 
+                        sp.name AS name, 
+                        sp.type AS porttype,
+                        pi.speed AS speed, 
+                        pi.duplex AS duplex, 
+                        c.name AS custname
+
+                FROM Entities\\SwitchPort sp
+                    JOIN sp.PhysicalInterface pi
+                    JOIN pi.VirtualInterface vi
+                    JOIN vi.Customer c
+
+                WHERE sp.Switcher = ?1
+
+                ORDER BY id ASC";
+
+
+        $query = $this->getEntityManager()->createQuery( $dql );
+        $query->setParameter( 1, $id );
+
+        $ports = $query->getArrayResult();
 
         return $ports;
     }
@@ -520,7 +609,7 @@ class Switcher extends EntityRepository
 
         foreach( [ 'A', 'B' ] as $side ) {
             /** @noinspection SqlNoDataSourceInspection */
-            $dql = "SELECT cb.type, cb.ipv4_subnet as cbSubnet,cb.enabled as cbEnabled, cl.enabled as clEnabled, cb.description, cl.bfd, sp$side.name, pi$side.speed, cl.ipv4_subnet as clSubnet, s$side.id as saId
+            $dql = "SELECT cb.type, cb.ipv4_subnet as cbSubnet,cb.enabled as cbEnabled, cl.enabled as clEnabled, cb.description, cl.bfd, sp$side.name, pi$side.speed, pi$side.autoneg, cl.ipv4_subnet as clSubnet, s$side.id as saId
                         FROM Entities\\CoreLink cl
                         LEFT JOIN cl.coreBundle cb
 
@@ -551,6 +640,7 @@ class Switcher extends EntityRepository
                 $export[ 'bfd' ]          = $ci[ 'bfd' ];
                 $export[ 'speed' ]        = $ci[ 'speed' ];
                 $export[ 'name' ]         = $ci[ 'name' ];
+                $export[ 'autoneg' ]      = $ci[ 'autoneg' ];
                 $export[ 'shutdown' ]     = $ci[ 'cbEnabled' ] && $ci[ 'clEnabled' ] ? false : true;
 
                 $cis[] = $export;
@@ -620,7 +710,8 @@ class Switcher extends EntityRepository
                                                     FROM Entities\\Switcher s2
                                                     LEFT JOIN s2.Infrastructure inf
                                                     WHERE s2.id = ?1)
-                        AND s.loopback_ip IS NOT NULL";
+                        AND s.loopback_ip IS NOT NULL
+                        AND s.active = 1";
 
         if( $excludeCurrentSwitch ){
             $dql .= " AND s.id != ".$id;
@@ -635,12 +726,12 @@ class Switcher extends EntityRepository
     }
 
     /**
-     * Returns all the bgp associated to the following switch ID
+     * Returns core bundle routing info for the specified switch ID
      *
      * @param int      $id     Switch ID - switch to query
      * @return array
      */
-    public function getAllNeighbors( int $id ): array {
+    public function getCoreBundleNeighbors( int $id ): array {
         $dql = "SELECT  cb.type, cb.ipv4_subnet as cbSubnet, cb.cost, cb.preference, cl.ipv4_subnet as clSubnet, sA.id as sAid, sB.id as sBid, sA.name as sAname , sB.name as sBname, sA.asn as sAasn , sB.asn as sBasn
                     FROM Entities\\CoreLink cl
                     LEFT JOIN cl.coreBundle cb
@@ -659,7 +750,17 @@ class Switcher extends EntityRepository
             $query = $this->getEntityManager()->createQuery( $dql );
             $query->setParameter( 1, $id);
 
-            $listbgp = $query->getArrayResult();
+            return $query->getArrayResult();
+    }
+
+    /**
+     * Returns all bgp session info associated with the specified switch ID
+     *
+     * @param int      $id     Switch ID - switch to query
+     * @return array
+     */
+    public function getAllNeighbors( int $id ): array {
+            $listbgp = $this->getCoreBundleNeighbors( $id );
 
             $neighbors = [];
             foreach( $listbgp as $bgp ){
@@ -675,6 +776,30 @@ class Switcher extends EntityRepository
             }
 
         return $neighbors;
+    }
+
+    /**
+     * Returns cost info about the adjacent ASNs for the specified switch ID
+     *
+     * @param int      $id     Switch ID - switch to query
+     * @return array
+     */
+    public function getAdjacentASNInfo( int $id ): array {
+            $listbgp = $this->getCoreBundleNeighbors( $id );
+
+            $adjacencies = [];
+            foreach( $listbgp as $bgp ){
+                $side = ( $bgp[ 'sAid' ] == $id ) ? 'B' : 'A';
+                $remoteasn = $bgp[ 's' .$side. 'asn'];
+                $adjacencies[$remoteasn] = [
+                    'description' => $bgp[ 's' .$side. 'name'],
+                    'asn' => $bgp[ 's' .$side. 'asn'],
+                    'cost' => $bgp[ 'cost'],
+                    'preference' => $bgp[ 'preference'],
+                ] ;
+            }
+
+        return $adjacencies;
     }
 
     /**
@@ -715,4 +840,71 @@ class Switcher extends EntityRepository
                   WHERE csc.switchid = {$id}"
             )->getResult();
     }
+
+    /**
+     * Get all switches (or a particular one) for listing on the frontend CRUD
+     *
+     * @see \IXP\Http\Controller\Doctrine2Frontend
+     *
+     *
+     * @param \stdClass $feParams
+     * @param int|null $id
+     * @return array Array of switches (as associated arrays) (or single element if `$id` passed)
+     */
+    public function getAllForFeList( \stdClass $feParams, int $id = null, $params = null )
+    {
+        $dql = "SELECT  s.id AS id, 
+                        s.name AS name,
+                        s.ipv4addr AS ipv4addr, 
+                        s.ipv6addr AS ipv6addr, 
+                        s.snmppasswd AS snmppasswd,
+                        i.name AS infrastructure, 
+                        s.model AS model,
+                        s.active AS active, 
+                        s.notes AS notes, 
+                        s.lastPolled AS lastPolled,
+                        s.hostname AS hostname, 
+                        s.os AS os, 
+                        s.osDate AS osDate, 
+                        s.osVersion AS osVersion,
+                        s.serialNumber AS serialNumber, 
+                        s.mauSupported AS mauSupported,
+                        v.id AS vendorid, 
+                        v.name AS vendor, 
+                        c.id AS cabinetid, 
+                        c.name AS cabinet, 
+                        s.asn as asn, 
+                        s.loopback_ip as loopback_ip, 
+                        s.loopback_name as loopback_name,
+                        s.mgmt_mac_address as mgmt_mac_address
+                FROM Entities\\Switcher s
+                LEFT JOIN s.Infrastructure i
+                LEFT JOIN s.Cabinet c
+                LEFT JOIN s.Vendor v
+                
+                WHERE 1 = 1";
+
+        if( $id ) {
+            $dql .= " AND s.id = " . (int)$id;
+        }
+
+
+        if( isset( $params[ "params" ][ "activeOnly" ] ) && $params[ "params" ][ "activeOnly" ] ){
+            $dql .= " AND s.active = true";
+        }
+
+        if( isset( $params[ "params" ][ "infra" ] ) && $params[ "params" ][ "infra" ] ){
+            $dql .= " AND s.Infrastructure = " . (int)$params[ "params" ][ "infra" ]->getId();
+        }
+
+        if( isset( $feParams->listOrderBy ) ) {
+            $dql .= " ORDER BY " . $feParams->listOrderBy . ' ';
+            $dql .= isset( $feParams->listOrderByDir ) ? $feParams->listOrderByDir : 'ASC';
+        }
+
+        $query = $this->getEntityManager()->createQuery( $dql );
+
+        return $query->getArrayResult();
+    }
+
 }
