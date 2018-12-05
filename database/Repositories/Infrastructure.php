@@ -105,4 +105,21 @@ class Infrastructure extends EntityRepository
         return $query->getArrayResult();
     }
 
+    /**
+     * Get all infrastructures for an IXP as an array indexed by their ids
+     *
+     * @param string $key The property of the infrastructure to place in the array (e.g. `Name`, `Shortname`)
+     * @return array The infrastructures for a given IXP
+     */
+    public function getAllAsArray( $key = 'Name' )
+    {
+        $infras = [];
+        $fn = "get{$key}";
+
+        $oInfras = $this->getAll();
+        foreach( $oInfras as $i )
+            $infras[ $i->getId() ] = $i->$fn();
+        return $infras;
+    }
+
 }
