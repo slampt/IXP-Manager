@@ -48,7 +48,7 @@ class PeeringManagerControllerTest extends DuskTestCase
 
             foreach( $peers[ "potential" ] as  $as => $p ){
                 if($p){
-                    $c = $peers[ "custs" ][ $as ];
+                    $c = $peers[ "custs" ][ $as ]; 
                     break;
                 }
 
