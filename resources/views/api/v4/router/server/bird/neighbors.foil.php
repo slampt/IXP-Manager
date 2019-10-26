@@ -70,9 +70,12 @@ int set allas;
     // Only do filtering if this is enabled per client:
     if( $int['irrdbfilter'] ?? true ):
 
-        if( count( $int['irrdbfilter_asns'] ) ):
+        $irrdbfilter_asns = d2r( 'IrrdbAsn'    )->getForCustomerAndProtocol( $int[ 'cid' ], $t->router->protocol(), true );
+        $irrdbfilter_prefixes = d2r( 'IrrdbPrefix' )->getForCustomerAndProtocol( $int[ 'cid' ], $t->router->protocol(), true );
+
+        if( count( $irrdbfilter_asns ) ):
 ?>
-    allas = [ <?php echo $t->softwrap( $int['irrdbfilter_asns'], 10, ", ", ",", 16 ); ?> ];
+    allas = [ <?php echo $t->softwrap( $irrdbfilter_asns, 10, ", ", ",", 16 ); ?> ];
 
 <?php   else: ?>
 
@@ -83,13 +86,13 @@ int set allas;
     if !(bgp_path.last ~ allas) then
            reject;
 
-<?php   if( count( $int['irrdbfilter_prefixes'] ) ):
+<?php   if( count( $irrdbfilter_prefixes ) ):
     /* allnet = [ <?php echo $t->softwrap( $int['irrdbfilter_prefixes'], 4, ", ", ",", 16 ); ?> ]; */ ?>
 
     allnet = [ <?= implode( ', ',
             $int['rsmorespecifics']
-                    ? $t->bird()->prefixExactToLessSpecific( $int['irrdbfilter_prefixes'], $t->router->protocol(), config( 'ixp.irrdb.min_v' . $t->router->protocol() . '_subnet_size' ) )
-                    : $int['irrdbfilter_prefixes']
+                    ? $t->bird()->prefixExactToLessSpecific( $irrdbfilter_prefixes, $t->router->protocol(), config( 'ixp.irrdb.min_v' . $t->router->protocol() . '_subnet_size' ) )
+                    : $irrdbfilter_prefixes
                 ) ?> ];
 
     if ! (net ~ allnet) then

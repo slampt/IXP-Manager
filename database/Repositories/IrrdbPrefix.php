@@ -70,6 +70,37 @@ class IrrdbPrefix extends EntityRepository
     }
 
     /**
+     * Utility function to get the prefixes a customer has for a given protocol
+     * like getForCustomerAndProtocol() above but paginates.
+     *
+     * Returns a flat array of prefixes.
+     *
+     * @param \Entities\Customer $cust The customer entity
+     * @param int $protocol The IP protocol (4/6)
+     * @param int $max Maximum number of results to return
+     * @param int $first Where to start. Usually $itn = 0; ++$int * $max;
+     * @return array The number of prefixes found
+     */
+    public function paginateForCustomerAndProtocol( $cust, int $protocol, int $max = 100000, int $first = 0 ): array
+    {
+        $prefixes = $this->getEntityManager()->createQuery(
+            "SELECT p.prefix
+                    FROM \\Entities\\IrrdbPrefix p
+                    WHERE p.Customer = :cust AND p.protocol = :protocol
+                    ORDER BY INET" . ( $protocol == 6 ? '6' : '' ) . "_ATON( p.prefix ) ASC, p.id ASC
+                    "
+                )
+            ->setParameter( 'cust', $cust )
+            ->setParameter( 'protocol', $protocol )
+            ->setMaxResults($max)
+            ->setFirstResult($first * $max)
+            ->getScalarResult();
+
+        return array_column($prefixes, "prefix");
+    }
+
+
+    /**
      * Utility function to get the number of prefixes a customer has for a given protocol
      *
      * @param \Entities\Customer $cust The customer entity

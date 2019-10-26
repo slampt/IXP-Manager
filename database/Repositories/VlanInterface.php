@@ -554,10 +554,10 @@ class VlanInterface extends EntityRepository
 
             $int['allpeeringips'] = $this->getAllIPsForASN( $vlan, $int['autsys'], $protocol );
 
-            if( $int['irrdbfilter'] ) {
-                $int['irrdbfilter_prefixes'] = d2r( 'IrrdbPrefix' )->getForCustomerAndProtocol( $int[ 'cid' ], $protocol, true );
-                $int['irrdbfilter_asns'    ] = d2r( 'IrrdbAsn'    )->getForCustomerAndProtocol( $int[ 'cid' ], $protocol, true );
-            }
+//            if( $int['irrdbfilter'] ) {
+//                $int['irrdbfilter_prefixes'] = d2r( 'IrrdbPrefix' )->getForCustomerAndProtocol( $int[ 'cid' ], $protocol, true );
+//                $int['irrdbfilter_asns'    ] = d2r( 'IrrdbAsn'    )->getForCustomerAndProtocol( $int[ 'cid' ], $protocol, true );
+//            }
 
             $newints[ $int['address'] ] = $int;
         }

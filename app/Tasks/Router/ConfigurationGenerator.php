@@ -86,13 +86,9 @@ class ConfigurationGenerator
         $ints = D2EM::getRepository( VlanInterfaceEntity::class )->sanitiseVlanInterfaces(
             $this->router()->getVlan(), $this->router()->getProtocol(), $this->router()->getType(), $this->router()->getQuarantine() );
 
-        $v = view( $this->router()->getTemplate() )->with(
+        return view( $this->router()->getTemplate() )->with(
             [ 'handle' => $this->router()->getHandle(), 'ints' => $ints, 'router' => $this->router(), 'vlan' => $this->router()->getVlan() ]
         );
-
-        Log::info( 'Generated router configuration for ' . $this->router()->handle() . ' and used ' . memory_get_peak_usage() . ' bytes (' . memory_get_peak_usage(true) . ' real) of memory.' );
-
-        return $v;
     }
-
+    
 }

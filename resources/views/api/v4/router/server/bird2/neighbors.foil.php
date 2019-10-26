@@ -144,10 +144,12 @@ int set allas;
     // Only do IRRDB ASN filtering if this is enabled per client:
     if( $int['irrdbfilter'] ?? true ):
 
-        if( count( $int['irrdbfilter_asns'] ) ):
+        $irrdbfilter_asns = d2r( 'IrrdbAsn'    )->getForCustomerAndProtocol( $int[ 'cid' ], $t->router->protocol(), true );
+
+        if( count( $irrdbfilter_asns ) ):
 ?>
 
-    allas = [ <?php echo $t->softwrap( $int['irrdbfilter_asns'], 10, ", ", ",", 14, 7 ); ?>
+    allas = [ <?php echo $t->softwrap( $irrdbfilter_asns, 10, ", ", ",", 14, 7 ); ?>
 
     ];
 
@@ -183,12 +185,25 @@ int set allas;
     // Only do IRRDB prefix filtering if this is enabled per client:
     if( $int['irrdbfilter'] ?? true ):
 
-        if( count( $int['irrdbfilter_prefixes'] ) ):
+        $irrdbfilter_prefixes = d2r( 'IrrdbPrefix' )->paginateForCustomerAndProtocol( $int[ 'cid' ], $t->router->protocol(), 1000000, 0 );
+        $runningcnt = 0;
+
+        if( count( $irrdbfilter_prefixes ) ):
 ?>
 
     allnet = [ <?php echo $t->softwrap( $int['rsmorespecifics']
-            ? $t->bird()->prefixExactToLessSpecific( $int['irrdbfilter_prefixes'], $t->router->protocol(), config( 'ixp.irrdb.min_v' . $t->router->protocol() . '_subnet_size' ) )
-            : $int['irrdbfilter_prefixes'], 4, ", ", ",", 15, $t->router->protocol() == 6 ? 36 : 26 ); ?>
+            ? $t->bird()->prefixExactToLessSpecific( $irrdbfilter_prefixes, $t->router->protocol(), config( 'ixp.irrdb.min_v' . $t->router->protocol() . '_subnet_size' ) )
+            : $irrdbfilter_prefixes, 4, ", ", ",", 15, $t->router->protocol() == 6 ? 36 : 26 );
+
+        while( count( $irrdbfilter_prefixes ) === 100000 ) {
+
+            $irrdbfilter_prefixes = d2r( 'IrrdbPrefix' )->paginateForCustomerAndProtocol( $int[ 'cid' ], $t->router->protocol(), 1000000, ++$runningcnt );
+
+            echo ",\n" . $t->softwrap( $t->int[ 'rsmorespecifics' ]
+                ? $t->bird()->prefixExactToLessSpecific( $irrdbfilter_prefixes, $t->router->protocol(), config( 'ixp.irrdb.min_v' . $t->router->protocol() . '_subnet_size' ) )
+                : $irrdbfilter_prefixes, 4, ", ", ",", 15, $t->router->protocol() == 6 ? 36 : 26 );
+
+        } ?>
 
     ];
 
