@@ -75,6 +75,11 @@ $this->layout( 'layouts/ixpv4' );
                         ->blockHelp( '' );
                     ?>
 
+                    <?= Former::number( 'vlantag' )
+                        ->label( 'VLAN Tag' )
+                        ->blockHelp( 'The VLAN to translate to, if required. 0 signifies untagged ');
+                   ?>
+
                     <?= Former::checkbox( 'trunk' )
                         ->label('&nbsp;')
                         ->text( 'Use 802.1q framing' )

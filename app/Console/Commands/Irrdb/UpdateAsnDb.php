@@ -65,7 +65,7 @@ class UpdateAsnDb extends UpdateDb {
         $customers = $this->resolveCustomers();
 
         foreach( $customers as $c ) {
-            $task = new UpdateAsnDbTask( $c );
+            $task = new UpdateAsnDbTask( $c , [ 4 ] );
             $this->printResults( $c, $task->update(), 'asn' );
         }
 
