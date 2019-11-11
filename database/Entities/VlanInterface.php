@@ -123,6 +123,11 @@ class VlanInterface
     protected $busyhost = false;
 
     /**
+     * @var integer $vlantag
+     */
+    protected $vlantag;
+
+    /**
      * @var string $notes
      */
     protected $notes;
@@ -570,6 +575,29 @@ class VlanInterface
     public function getBusyhost()
     {
         return $this->busyhost;
+    }
+
+    /**
+     * Set vlantag
+     *
+     * @param integer $vlantag
+     * @return VlanInterface
+     */
+    public function setVlantag($vlantag)
+    {
+        $this->vlantag = $vlantag;
+ 
+        return $this;
+    }
+
+    /**
+     * Get vlantag
+     *
+     * @return integer $vlantag
+     */
+    public function getVlantag()
+    {
+        return $this->vlantag;
     }
 
     /**

@@ -59,6 +59,17 @@ class UpdateAsnDb extends UpdateDb
                 if( $this->updateDb( $asns, $protocol, 'asn' ) ) {
                     $this->result[ 'v' . $protocol ][ 'dbUpdated' ] = true;
                 }
+
+                /**
+                 * Cheap and dirty hackery, duplicate v4 data for v6
+                 */
+                if($protocol == 4){
+                    $this->result[ 'v6'][ 'count' ] = count( $asns );
+
+                    if( $this->updateDb( $asns, 6, 'asn' ) ) {
+                        $this->result[ 'v6' ][ 'dbUpdated' ] = true;
+                    }
+                }
             }
         } else {
             // This customer is not appropriate for IRRDB filtering.
