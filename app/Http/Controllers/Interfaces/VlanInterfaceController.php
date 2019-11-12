@@ -144,7 +144,7 @@ class VlanInterfaceController extends Common
                 'rsmorespecifics'           => $request->old( 'rsmorespecifics',         ( $vli->getRsMoreSpecifics()  ? 1 : 0 ) ),
                 'as112client'               => $request->old( 'as112client',             ( $vli->getAs112client()      ? 1 : 0 ) ),
                 'busyhost'                  => $request->old( 'busyhost',                ( $vli->getBusyhost()         ? 1 : 0 ) ),
-                'vlantag'                   => array_key_exists( 'vlantag',                 $old    ) ? $old['vlantag']             : ( $vli->getVlantag()          ? $vli->getVlantag() : 0 ),
+                'vlantag'                   => $request->old( 'vlantag',                 ( $vli->getVlantag()          ? $vli->getVlantag() : 0 ) ),
 
                 'ipv6-enabled'              => $request->old( 'ipv6-enabled',            ( $vli->getIpv6enabled()      ? 1 : 0 ) ),
                 'ipv6-address'              => $request->old( 'ipv6-address',            ( $vli->getIPv6Address()      ? $vli->getIPv6Address()->getId() : null ) ),

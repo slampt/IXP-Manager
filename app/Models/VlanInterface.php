@@ -56,6 +56,7 @@ use Illuminate\Database\Eloquent\{
  * @property int|null $ipv6monitorrcbgp
  * @property int|null $as112client
  * @property int|null $busyhost
+ * @property int|null $vlantag
  * @property string|null $notes
  * @property int $rsmorespecifics
  * @property-read \IXP\Models\VirtualInterface|null $virtualInterface
