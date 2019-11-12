@@ -57,11 +57,13 @@
                         <tr>
 
                             <td>
-                                <?= $t->ee( ($vli->getVlantag() == 0) ? '(Untagged)' : "(Tagged as {$vli->getVlantag()})" ) ?>
+                                <?= $vli->getVlan()->getName() ?>
+                                
                             </td>
 
                             <td>
-                                <?= $t->ee( $vli->getVlan()->getNumber() )?>
+                                <?= $t->ee( $vli->getVlan()->getNumber() )?><br />
+                                <?= $t->ee( ($vli->getVlantag() == 0) ? '(Untagged)' : "(Tagged as {$vli->getVlantag()})" ) ?>
                             </td>
 
                             <td>
