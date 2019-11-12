@@ -35,6 +35,8 @@ tools/perl-lib/IXPManager/blib/
 tools/perl-lib/IXPManager/pm_to_blib
 tools/perl-lib/IXPManager/ixpmanager.conf
 
+tools/runtime/sflow/*.json
+
 config/contact_group.php
 config/custom.php
 config/grapher_cli.php
