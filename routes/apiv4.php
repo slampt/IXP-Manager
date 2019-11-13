@@ -131,4 +131,4 @@ Route::get( 'statistics/overall-by-month', 'StatisticsController@overallByMonth'
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Customer Sign Up
 
-Route::post('customer/store', 'Customer/CustomerController@store');
+Route::post('customer/store', 'Customer/CustomerController@store'); //look into Customer@add
