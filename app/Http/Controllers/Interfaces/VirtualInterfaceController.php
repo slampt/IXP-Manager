@@ -309,6 +309,7 @@ class VirtualInterfaceController extends Common
 
         $vli->setVirtualInterface(  $vi );
         $vli->setVlan(              $v  );
+        $vli->setVlantag(           $request->input( 'vlantag',         0     ) );
         $vli->setIrrdbfilter(       $request->input( 'irrdbfilter',     false ) );
         $vli->setRsMoreSpecifics(   $request->input( 'rsmorespecifics', false ) );
         $vli->setMcastenabled(      $request->input( 'mcastenabled',    false ) );
