@@ -155,8 +155,8 @@ while (<SFLOWTOOL>) {
 		next;
 	}
 
-	if ($vlan == 0) {
-    print "empty VLAN, loading translation map from disk...\n";
+  #if ($vlan == 0) {
+  #print "empty VLAN, loading translation map from disk...\n";
     my $json;
     {
       local $/; #Enable 'slurp' mode
@@ -171,7 +171,7 @@ while (<SFLOWTOOL>) {
       #print "Translating VLAN from " . $vlan;
       #print " to: " . $vlan . "\n";
     }
-	}
+  #}
 
 	my $srcvli = getvlifrommactable ($mactable, $infraid, $vlan, $srcmac);
 	my $dstvli = getvlifrommactable ($mactable, $infraid, $vlan, $dstmac);
