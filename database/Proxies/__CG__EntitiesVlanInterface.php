@@ -66,10 +66,10 @@ class VlanInterface extends \Entities\VlanInterface implements \Doctrine\ORM\Pro
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'ipv4enabled', 'ipv4hostname', 'ipv6enabled', 'ipv6hostname', 'mcastenabled', 'irrdbfilter', 'bgpmd5secret', 'ipv4bgpmd5secret', 'ipv6bgpmd5secret', 'maxbgpprefix', 'rsclient', 'rsmorespecifics', 'ipv4canping', 'ipv6canping', 'ipv4monitorrcbgp', 'ipv6monitorrcbgp', 'as112client', 'busyhost', 'notes', 'id', 'IPv4Address', 'IPv6Address', 'VirtualInterface', 'Vlan', 'layer2Addresses'];
+            return ['__isInitialized__', 'ipv4enabled', 'ipv4hostname', 'ipv6enabled', 'ipv6hostname', 'mcastenabled', 'irrdbfilter', 'bgpmd5secret', 'ipv4bgpmd5secret', 'ipv6bgpmd5secret', 'maxbgpprefix', 'rsclient', 'rsmorespecifics', 'ipv4canping', 'ipv6canping', 'ipv4monitorrcbgp', 'ipv6monitorrcbgp', 'as112client', 'busyhost', 'vlantag', 'notes', 'id', 'IPv4Address', 'IPv6Address', 'VirtualInterface', 'Vlan', 'layer2Addresses'];
         }
 
-        return ['__isInitialized__', 'ipv4enabled', 'ipv4hostname', 'ipv6enabled', 'ipv6hostname', 'mcastenabled', 'irrdbfilter', 'bgpmd5secret', 'ipv4bgpmd5secret', 'ipv6bgpmd5secret', 'maxbgpprefix', 'rsclient', 'rsmorespecifics', 'ipv4canping', 'ipv6canping', 'ipv4monitorrcbgp', 'ipv6monitorrcbgp', 'as112client', 'busyhost', 'notes', 'id', 'IPv4Address', 'IPv6Address', 'VirtualInterface', 'Vlan', 'layer2Addresses'];
+        return ['__isInitialized__', 'ipv4enabled', 'ipv4hostname', 'ipv6enabled', 'ipv6hostname', 'mcastenabled', 'irrdbfilter', 'bgpmd5secret', 'ipv4bgpmd5secret', 'ipv6bgpmd5secret', 'maxbgpprefix', 'rsclient', 'rsmorespecifics', 'ipv4canping', 'ipv6canping', 'ipv4monitorrcbgp', 'ipv6monitorrcbgp', 'as112client', 'busyhost', 'vlantag', 'notes', 'id', 'IPv4Address', 'IPv6Address', 'VirtualInterface', 'Vlan', 'layer2Addresses'];
     }
 
     /**
@@ -570,6 +570,28 @@ class VlanInterface extends \Entities\VlanInterface implements \Doctrine\ORM\Pro
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getBusyhost', []);
 
         return parent::getBusyhost();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setVlantag($vlantag)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setVlantag', [$vlantag]);
+
+        return parent::setVlantag($vlantag);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getVlantag()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getVlantag', []);
+
+        return parent::getVlantag();
     }
 
     /**
