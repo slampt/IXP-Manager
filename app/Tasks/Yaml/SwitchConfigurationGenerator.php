@@ -123,14 +123,13 @@ class SwitchConfigurationGenerator
         if( $vi->getChannelgroup() ) {
             $p['lagindex'] = $vi->getChannelgroup();
         }
-
         $p['vlans'] = [];
 
         foreach( $vi->getVlanInterfaces() as $vli ) {
             /** @var \Entities\VlanInterface $vli */
             $v = [];
             $v[ 'number' ] = $vli->getVlan()->getNumber();
-
+            $v[ 'customVlanTag' ] = $vli->getVlantag();
             $v[ 'macaddresses' ] = [];
             foreach( $vli->getLayer2Addresses() as $mac ) {
                 $v[ 'macaddresses' ][] = $mac->getMacFormattedWithColons();
