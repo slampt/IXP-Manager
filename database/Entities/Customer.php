@@ -1493,6 +1493,26 @@ class Customer
         return false;
     }
 
+     /**
+     * Does the customer have a specific VLAN?
+     *
+     * @param int $vlanId the VLAN to test for
+     * @return bool
+     */
+    public function hasVLAN(int $vlanId)
+    {
+        foreach( $this->getVirtualInterfaces() as $vi )
+        {
+            foreach( $vi->getVlanInterfaces() as $vli )
+            {
+                if( $vli->getVlan()->getNumber() == $vlanId )
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * Get private VLAN information as an associate array
      *
