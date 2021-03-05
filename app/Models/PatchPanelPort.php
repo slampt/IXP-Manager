@@ -41,8 +41,15 @@ use Illuminate\Support\Carbon;
  * @property int|null $switch_port_id
  * @property int|null $patch_panel_id
  * @property int|null $customer_id
+ * @property int|null $duplex_master_id
+ * @property string|null $description
+ * @property int $number
  * @property int $state
+ * @property string|null $colo_circuit_ref
+ * @property string|null $colo_billing_ref
+ * @property string|null $ticket_ref
  * @property string|null $notes
+ * @property string|null $private_notes
  * @property string|null $assigned_at
  * @property string|null $connected_at
  * @property string|null $cease_requested_at
@@ -50,15 +57,8 @@ use Illuminate\Support\Carbon;
  * @property string|null $last_state_change
  * @property int $internal_use
  * @property int $chargeable
- * @property int|null $duplex_master_id
- * @property int $number
- * @property string|null $colo_circuit_ref
- * @property string|null $ticket_ref
- * @property string|null $private_notes
  * @property int $owned_by
  * @property string|null $loa_code
- * @property string|null $description
- * @property string|null $colo_billing_ref
  * @property-read \IXP\Models\PatchPanel|null $patchPanel
  * @property-read \Illuminate\Database\Eloquent\Collection|\IXP\Models\PatchPanelPortFile[] $patchPanelPortFiles
  * @property-read int|null $patch_panel_port_files_count

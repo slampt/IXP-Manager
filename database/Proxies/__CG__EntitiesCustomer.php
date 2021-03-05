@@ -1283,6 +1283,17 @@ class Customer extends \Entities\Customer implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
+    public function hasVLAN(int $vlanId)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'hasVLAN', [$vlanId]);
+
+        return parent::hasVLAN($vlanId);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getPrivateVlanDetails()
     {
 
