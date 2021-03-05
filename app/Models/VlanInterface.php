@@ -50,15 +50,15 @@ use Illuminate\Database\Eloquent\{
  * @property string|null $ipv6bgpmd5secret
  * @property int|null $maxbgpprefix
  * @property int|null $rsclient
+ * @property int $rsmorespecifics
  * @property int|null $ipv4canping
  * @property int|null $ipv6canping
  * @property int|null $ipv4monitorrcbgp
  * @property int|null $ipv6monitorrcbgp
  * @property int|null $as112client
  * @property int|null $busyhost
- * @property int|null $vlantag
  * @property string|null $notes
- * @property int $rsmorespecifics
+ * @property int $vlantag
  * @property-read \IXP\Models\VirtualInterface|null $virtualInterface
  * @property-read \IXP\Models\Vlan|null $vlan
  * @method static \Illuminate\Database\Eloquent\Builder|\IXP\Models\VlanInterface newModelQuery()
@@ -88,6 +88,7 @@ use Illuminate\Database\Eloquent\{
  * @method static \Illuminate\Database\Eloquent\Builder|\IXP\Models\VlanInterface whereRsmorespecifics($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\IXP\Models\VlanInterface whereVirtualinterfaceid($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\IXP\Models\VlanInterface whereVlanid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\IXP\Models\VlanInterface whereVlantag($value)
  * @mixin \Eloquent
  */
 class VlanInterface extends Model

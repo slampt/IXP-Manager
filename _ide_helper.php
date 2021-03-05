@@ -3,7 +3,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 6.18.20 on 2020-06-19 14:57:41.
+ * Generated for Laravel 6.18.20 on 2020-07-14 10:55:38.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -3563,30 +3563,6 @@ namespace Illuminate\Support\Facades {
         }
         
         /**
-         * Remove all items from the cache.
-         *
-         * @return bool 
-         * @static 
-         */ 
-        public static function flush()
-        {
-                        /** @var \Illuminate\Cache\ArrayStore $instance */
-                        return $instance->flush();
-        }
-        
-        /**
-         * Get the cache key prefix.
-         *
-         * @return string 
-         * @static 
-         */ 
-        public static function getPrefix()
-        {
-                        /** @var \Illuminate\Cache\ArrayStore $instance */
-                        return $instance->getPrefix();
-        }
-        
-        /**
          * Get a lock instance.
          *
          * @param string $name
@@ -3597,7 +3573,7 @@ namespace Illuminate\Support\Facades {
          */ 
         public static function lock($name, $seconds = 0, $owner = null)
         {
-                        /** @var \Illuminate\Cache\ArrayStore $instance */
+                        /** @var \Illuminate\Cache\MemcachedStore $instance */
                         return $instance->lock($name, $seconds, $owner);
         }
         
@@ -3611,8 +3587,57 @@ namespace Illuminate\Support\Facades {
          */ 
         public static function restoreLock($name, $owner)
         {
-                        /** @var \Illuminate\Cache\ArrayStore $instance */
+                        /** @var \Illuminate\Cache\MemcachedStore $instance */
                         return $instance->restoreLock($name, $owner);
+        }
+        
+        /**
+         * Remove all items from the cache.
+         *
+         * @return bool 
+         * @static 
+         */ 
+        public static function flush()
+        {
+                        /** @var \Illuminate\Cache\MemcachedStore $instance */
+                        return $instance->flush();
+        }
+        
+        /**
+         * Get the underlying Memcached connection.
+         *
+         * @return \Memcached 
+         * @static 
+         */ 
+        public static function getMemcached()
+        {
+                        /** @var \Illuminate\Cache\MemcachedStore $instance */
+                        return $instance->getMemcached();
+        }
+        
+        /**
+         * Get the cache key prefix.
+         *
+         * @return string 
+         * @static 
+         */ 
+        public static function getPrefix()
+        {
+                        /** @var \Illuminate\Cache\MemcachedStore $instance */
+                        return $instance->getPrefix();
+        }
+        
+        /**
+         * Set the cache key prefix.
+         *
+         * @param string $prefix
+         * @return void 
+         * @static 
+         */ 
+        public static function setPrefix($prefix)
+        {
+                        /** @var \Illuminate\Cache\MemcachedStore $instance */
+                        $instance->setPrefix($prefix);
         }
          
     }

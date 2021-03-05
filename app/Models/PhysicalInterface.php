@@ -32,13 +32,13 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int $id
  * @property int|null $switchportid
+ * @property int|null $fanout_physical_interface_id
  * @property int|null $virtualinterfaceid
  * @property int|null $status
  * @property int|null $speed
  * @property string|null $duplex
- * @property string|null $notes
- * @property int|null $fanout_physical_interface_id
  * @property int $autoneg
+ * @property string|null $notes
  * @property-read \IXP\Models\VirtualInterface|null $virtualInterface
  * @method static \Illuminate\Database\Eloquent\Builder|\IXP\Models\PhysicalInterface newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\IXP\Models\PhysicalInterface newQuery()

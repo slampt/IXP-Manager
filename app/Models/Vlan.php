@@ -35,14 +35,14 @@ use Illuminate\Database\Eloquent\{
  * IXP\Models\Vlan
  *
  * @property int $id
- * @property string|null $name
- * @property int|null $number
- * @property string|null $notes
- * @property int $private
  * @property int $infrastructureid
+ * @property string|null $name
+ * @property string|null $config_name
+ * @property int|null $number
+ * @property int $private
  * @property int $peering_matrix
  * @property int $peering_manager
- * @property string|null $config_name
+ * @property string|null $notes
  * @property-read \Illuminate\Database\Eloquent\Collection|\IXP\Models\Router[] $routers
  * @property-read int|null $routers_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\IXP\Models\VlanInterface[] $vlanInterfaces

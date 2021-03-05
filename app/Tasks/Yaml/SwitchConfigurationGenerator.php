@@ -116,6 +116,7 @@ class SwitchConfigurationGenerator
 
         $p                       = [];
         $p['type']               = 'edge';
+        $p['asnum']              = $vi->getCustomer()->getAutsys();
         $p['description']        = $vi->getCustomer()->getAbbreviatedName();
         $p['dot1q']              = $vi->getTrunk();
         $p['virtualinterfaceid'] = $vi->getId();
