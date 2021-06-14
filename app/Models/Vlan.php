@@ -37,7 +37,6 @@ use Illuminate\Database\Eloquent\{
  * @property int $id
  * @property int $infrastructureid
  * @property string|null $name
- * @property string|null $config_name
  * @property int|null $number
  * @property int $private
  * @property string|null $notes

@@ -47,7 +47,6 @@ use Illuminate\Support\Carbon;
  * @property int $number
  * @property int $state
  * @property string|null $colo_circuit_ref
- * @property string|null $colo_billing_ref
  * @property string|null $ticket_ref
  * @property string|null $notes
  * @property string|null $private_notes
@@ -60,6 +59,7 @@ use Illuminate\Support\Carbon;
  * @property int $owned_by
  * @property string|null $customer
  * @property string|null $switchport
+ * @property string|null $colo_billing_ref
  * @property int|null $cust_id
  * @property-read \IXP\Models\PatchPanelPort|null $patchPanelPort
  * @property-read \Illuminate\Database\Eloquent\Collection|\IXP\Models\PatchPanelPortHistoryFile[] $patchPanelPortHistoryFiles

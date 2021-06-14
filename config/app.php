@@ -208,8 +208,6 @@ return [
 
         Former\FormerServiceProvider::class,
 
-        LukeTowers\Purifier\PurifierServiceProvider::class,
-
         Webpatser\Countries\CountriesServiceProvider::class,
 
         Intervention\Image\ImageServiceProvider::class,

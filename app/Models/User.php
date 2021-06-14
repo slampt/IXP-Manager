@@ -34,7 +34,6 @@ use Illuminate\Database\Eloquent\{
  *
  * @property int $id
  * @property int|null $custid
- * @property string|null $name
  * @property string|null $username
  * @property string|null $password
  * @property string|null $email
@@ -46,6 +45,7 @@ use Illuminate\Database\Eloquent\{
  * @property int|null $lastupdatedby
  * @property string|null $creator
  * @property string|null $created
+ * @property string|null $name
  * @property int|null $peeringdb_id
  * @property mixed|null $extra_attributes
  * @property-read \IXP\Models\Customer|null $customer

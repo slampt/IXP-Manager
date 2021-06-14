@@ -46,7 +46,6 @@ use Illuminate\Support\Carbon;
  * @property int $number
  * @property int $state
  * @property string|null $colo_circuit_ref
- * @property string|null $colo_billing_ref
  * @property string|null $ticket_ref
  * @property string|null $notes
  * @property string|null $private_notes
@@ -59,6 +58,7 @@ use Illuminate\Support\Carbon;
  * @property int $chargeable
  * @property int $owned_by
  * @property string|null $loa_code
+ * @property string|null $colo_billing_ref
  * @property-read \IXP\Models\PatchPanel|null $patchPanel
  * @property-read \Illuminate\Database\Eloquent\Collection|\IXP\Models\PatchPanelPortFile[] $patchPanelPortFiles
  * @property-read int|null $patch_panel_port_files_count

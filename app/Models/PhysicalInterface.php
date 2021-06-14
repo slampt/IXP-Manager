@@ -39,7 +39,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $duplex
  * @property string|null $notes
  * @property int $autoneg
- * @property string|null $notes
  * @property-read \IXP\Models\VirtualInterface|null $virtualInterface
  * @method static \Illuminate\Database\Eloquent\Builder|PhysicalInterface newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PhysicalInterface newQuery()
