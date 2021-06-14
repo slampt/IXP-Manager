@@ -10,7 +10,7 @@
 bin/fixtures.php
 public/.htaccess
 public/logos/*
-
+/database/Proxies/*
 public/favicon.ico
 
 .directory
