@@ -3212,6 +3212,28 @@
                         return $instance->macroCall($method, $parameters);
         }
                     /**
+         * Remove all items from the cache.
+         *
+         * @return bool 
+         * @static 
+         */ 
+        public static function flush()
+        {
+                        /** @var \Illuminate\Cache\ArrayStore $instance */
+                        return $instance->flush();
+        }
+                    /**
+         * Get the cache key prefix.
+         *
+         * @return string 
+         * @static 
+         */ 
+        public static function getPrefix()
+        {
+                        /** @var \Illuminate\Cache\ArrayStore $instance */
+                        return $instance->getPrefix();
+        }
+                    /**
          * Get a lock instance.
          *
          * @param string $name
@@ -3222,7 +3244,7 @@
          */ 
         public static function lock($name, $seconds = 0, $owner = null)
         {
-                        /** @var \Illuminate\Cache\MemcachedStore $instance */
+                        /** @var \Illuminate\Cache\ArrayStore $instance */
                         return $instance->lock($name, $seconds, $owner);
         }
                     /**
@@ -3235,53 +3257,8 @@
          */ 
         public static function restoreLock($name, $owner)
         {
-                        /** @var \Illuminate\Cache\MemcachedStore $instance */
+                        /** @var \Illuminate\Cache\ArrayStore $instance */
                         return $instance->restoreLock($name, $owner);
-        }
-                    /**
-         * Remove all items from the cache.
-         *
-         * @return bool 
-         * @static 
-         */ 
-        public static function flush()
-        {
-                        /** @var \Illuminate\Cache\MemcachedStore $instance */
-                        return $instance->flush();
-        }
-                    /**
-         * Get the underlying Memcached connection.
-         *
-         * @return \Memcached 
-         * @static 
-         */ 
-        public static function getMemcached()
-        {
-                        /** @var \Illuminate\Cache\MemcachedStore $instance */
-                        return $instance->getMemcached();
-        }
-                    /**
-         * Get the cache key prefix.
-         *
-         * @return string 
-         * @static 
-         */ 
-        public static function getPrefix()
-        {
-                        /** @var \Illuminate\Cache\MemcachedStore $instance */
-                        return $instance->getPrefix();
-        }
-                    /**
-         * Set the cache key prefix.
-         *
-         * @param string $prefix
-         * @return void 
-         * @static 
-         */ 
-        public static function setPrefix($prefix)
-        {
-                        /** @var \Illuminate\Cache\MemcachedStore $instance */
-                        $instance->setPrefix($prefix);
         }
          
     }
@@ -15473,6 +15450,38 @@
         }
          
     }
+            /**
+     * 
+     *
+     * @see \IXP\Services\Purifier
+     */ 
+        class Purifier {
+                    /**
+         * 
+         *
+         * @param $dirty
+         * @param null $config
+         * @return mixed 
+         * @static 
+         */ 
+        public static function clean($dirty, $config = null)
+        {
+                        /** @var \IXP\Services\Purifier $instance */
+                        return $instance->clean($dirty, $config);
+        }
+                    /**
+         * Get HTMLPurifier instance.
+         *
+         * @return \HTMLPurifier 
+         * @static 
+         */ 
+        public static function getInstance()
+        {
+                        /** @var \IXP\Services\Purifier $instance */
+                        return $instance->getInstance();
+        }
+         
+    }
      
 }
 
@@ -21994,6 +22003,7 @@ namespace  {
             class Grapher extends \IXP\Support\Facades\Grapher {}
             class Image extends \Intervention\Image\Facades\Image {}
             class Former extends \Former\Facades\Former {}
+            class Purifier extends \IXP\Support\Facades\Purifier {}
             class PDF extends \Barryvdh\DomPDF\Facade {}
             class Countries extends \Webpatser\Countries\CountriesFacade {}
             class Google2FA extends \PragmaRX\Google2FALaravel\Facade {}

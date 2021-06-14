@@ -768,7 +768,10 @@ class Switcher
         foreach( $host->useIface()->indexes() as $index ) {
 
             // we're only interested in Ethernet ports here (right?)
-            if( $host->useIface()->types()[ $index ] != SNMPIface::IF_TYPE_ETHERNETCSMACD && $host->useIface()->types()[ $index ] != SNMPIface::IF_TYPE_L3IPVLAN && $host->useIface()->types()[ $index ] != SNMPIface::IF_TYPE_IEEE8023ADLAG) {
+            if( $host->useIface()->types()[ $index ] != SNMPIface::IF_TYPE_ETHERNETCSMACD
+                && $host->useIface()->types()[ $index ] != SNMPIface::IF_TYPE_L2VLAN
+                && $host->useIface()->types()[ $index ] != SNMPIface::IF_TYPE_L3IPVLAN
+                && $host->useIface()->types()[ $index ] != SNMPIface::IF_TYPE_IEEE8023ADLAG) {
                 continue;
             }
 
