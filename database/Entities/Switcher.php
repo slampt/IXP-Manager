@@ -767,6 +767,8 @@ class Switcher
         // iterate over all the ports discovered on the switch:
         foreach( $host->useIface()->indexes() as $index ) {
 
+        //Log::info( "{$this->getName()} - Index: {$index} - Name: {$host->useIface()->names()[ $index ]} - Type: {$host->useIface()->types()[ $index ]}" );
+
             // we're only interested in Ethernet ports here (right?)
             if( $host->useIface()->types()[ $index ] != SNMPIface::IF_TYPE_ETHERNETCSMACD
                 && $host->useIface()->types()[ $index ] != SNMPIface::IF_TYPE_L2VLAN
@@ -774,6 +776,8 @@ class Switcher
                 && $host->useIface()->types()[ $index ] != SNMPIface::IF_TYPE_IEEE8023ADLAG) {
                 continue;
             }
+
+// Log::info( "{$this->getName()} - index: {$index}" );
 
             // find the matching switchport that may already be in the database (or create a new one)
             $sp = false;

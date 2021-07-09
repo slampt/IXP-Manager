@@ -72,7 +72,7 @@ class UpdateAsnDb extends UpdateDb
                     }
                 }
                 /** end cheap and dirty hackery */
-            }
+                /**            } */
             } else {
                 // This customer is not appropriate for IRRDB filtering.
                 // Delete any pre-existing entries just in case this has changed recently:

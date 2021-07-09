@@ -116,6 +116,8 @@ class SwitchConfigurationGenerator
 
         $p                       = [];
         $p['type']               = 'edge';
+        $p['reseller']           = $vi->getCustomer()->isReseller();
+        $p['resold']           = $vi->getCustomer()->isResoldCustomer();
         $p['asnum']              = $vi->getCustomer()->getAutsys();
         $p['description']        = $vi->getCustomer()->getAbbreviatedName();
         $p['dot1q']              = $vi->getTrunk();

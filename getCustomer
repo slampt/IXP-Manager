@@ -1,0 +1,125 @@
+app/Console/Commands/Upgrade/MigrateL2Addresses.php:                foreach( $vi->getVlanInterfaces() as $vli ) {
+app/Console/Commands/Upgrade/MigrateL2Addresses.php:                            . $vi->getCustomer()->getName() . ' with virtual interface: ' . url('virtual-interface/edit/id' )
+app/Console/Commands/Upgrade/MigrateL2Addresses.php:                            . '/' . $vi->getId() . ' as it already exists in this Vlan ' . $vli->getVlan()->getName()
+app/Console/Commands/Upgrade/MigrateL2Addresses.php:                    $this->alert( 'Created >1 layer2address for ' . $vi->getCustomer()->getName() . ' with virtual interface: '
+app/Console/Commands/Upgrade/MigrateL2Addresses.php:                        . url('virtual-interface/edit/id' ) . '/' . $vi->getId() );
+app/Console/Commands/Grapher/UploadPhysIntStatsToDb.php:                foreach( $vi->getPhysicalInterfaces() as $pi ) {
+app/Console/Commands/Grapher/Backend/Mrtg/Upgrade.php:                            . "{$pps['custs'][$cid]->getShortname()}-lag-viid-{$vi->getId()}-{$c}.log",
+app/Console/Commands/Grapher/Backend/Mrtg/Upgrade.php:                                . "{$pps['custs'][$cid]->getShortname()}-lag-viid-{$vi->getId()}-{$c}-{$p}.png",
+app/Console/Commands/Grapher/EmailPortUtilisation.php:                if( ( $speed = $vi->speed() * 1000 * 1000 ) == 0 ) {
+app/Console/Commands/Grapher/EmailPortUtilisation.php:                if( count( $vi->getPhysicalInterfaces() ) == 1 ) {
+app/Console/Commands/Grapher/EmailPortUtilisation.php:                    $graph = $this->grapher()->physint( $vi->getPhysicalInterfaces()[0] )->setCategory( Graph::CATEGORY_BITS )->setPeriod( Graph::PERIOD_WEEK );
+app/Console/Commands/Grapher/EmailPortUtilisation.php:                    $port['switch']  = $vi->getPhysicalInterfaces()[0]->getSwitchPort()->getSwitcher();
+app/Services/Helpdesk/Zendesk.php:            foreach( $vi->getVlanInterfaces() as $vli ) {
+app/Services/Grapher/Backend/Mrtg.php:                if( $vi->getCoreBundle() !== false ) {
+app/Services/Grapher/Backend/Mrtg.php:                foreach( $vi->getPhysicalInterfaces() as $pi ) {
+app/Services/Grapher/Backend/Mrtg.php:                    if( count( $vi->getPhysicalInterfaces() ) > 1 ) {
+app/Services/Grapher/Backend/Mrtg.php:                        $data['custlags'][$c->getId()][$vi->getId()][] = $pi->getId();
+app/Tasks/Yaml/SwitchConfigurationGenerator.php:        $p['asnum']              = $vi->getCustomer()->getAutsys();
+app/Tasks/Yaml/SwitchConfigurationGenerator.php:        $p['description']        = $vi->getCustomer()->getAbbreviatedName();
+app/Tasks/Yaml/SwitchConfigurationGenerator.php:        $p['dot1q']              = $vi->getTrunk();
+app/Tasks/Yaml/SwitchConfigurationGenerator.php:        $p['virtualinterfaceid'] = $vi->getId();
+app/Tasks/Yaml/SwitchConfigurationGenerator.php:        $p['lagframing']         = $vi->getLagFraming();
+app/Tasks/Yaml/SwitchConfigurationGenerator.php:        if( $vi->getChannelgroup() ) {
+app/Tasks/Yaml/SwitchConfigurationGenerator.php:            $p['lagindex'] = $vi->getChannelgroup();
+app/Tasks/Yaml/SwitchConfigurationGenerator.php:        foreach( $vi->getVlanInterfaces() as $vli ) {
+app/Tasks/Yaml/SwitchConfigurationGenerator.php:        if( !$vi->getLagFraming() ) {
+app/Tasks/Yaml/SwitchConfigurationGenerator.php:            $pi = $vi->getPhysicalInterfaces()[0];
+app/Tasks/Yaml/SwitchConfigurationGenerator.php:        $p['name']      = $vi->getBundleName();
+app/Tasks/Yaml/SwitchConfigurationGenerator.php:        $p['fastlacp']  = $vi->getFastLACP();
+app/Tasks/Yaml/SwitchConfigurationGenerator.php:        foreach( $vi->getPhysicalInterfaces() as $pi ) {
+app/Tasks/Yaml/SwitchConfigurationGenerator.php:        foreach( $vi->getPhysicalInterfaces() as $pi ) {
+app/Tasks/Yaml/SwitchConfigurationGenerator.php:        $p['dot1q']              = $vi->getTrunk();
+app/Tasks/Yaml/SwitchConfigurationGenerator.php:        $p['virtualinterfaceid'] = $vi->getId();
+app/Tasks/Yaml/SwitchConfigurationGenerator.php:        $p['lagframing']         = $vi->getLagFraming();
+app/Tasks/Yaml/SwitchConfigurationGenerator.php:        if( $vi->getChannelgroup() ) {
+app/Tasks/Yaml/SwitchConfigurationGenerator.php:            $p['lagindex'] = $vi->getChannelgroup();
+app/Tasks/Yaml/SwitchConfigurationGenerator.php:        if( !$vi->getLagFraming() ) {
+app/Tasks/Yaml/SwitchConfigurationGenerator.php:        $p['name']      = $vi->getBundleName();
+app/Tasks/Yaml/SwitchConfigurationGenerator.php:        $p['fastlacp']  = $vi->getFastLACP();
+app/Http/Controllers/Interfaces/Common.php:            $fnvi->setCustomer( $vi->getCustomer()->getReseller() );
+app/Http/Controllers/Interfaces/Common.php:            $fnvi->addPhysicalInterface( $fnpi );
+app/Http/Controllers/Interfaces/Common.php:        if( count( $vi->getPhysicalInterfaces() ) ) {
+app/Http/Controllers/Interfaces/Common.php:            if( $vi->getLagFraming() && !$vi->getChannelgroup() ) {
+app/Http/Controllers/Interfaces/Common.php:                $vi->setChannelgroup( D2EM::getRepository( VirtualInterfaceEntity::class )->assignChannelGroup( $vi ) );
+app/Http/Controllers/Interfaces/Common.php:            if( $vi->getLagFraming() && !$vi->getName() ) {
+app/Http/Controllers/Interfaces/Common.php:                if( $vi->getPhysicalInterfaces()[ 0 ]->getSwitchport()->getSwitcher()->getVendor() ) {
+app/Http/Controllers/Interfaces/Common.php:                    $vi->setName( $vi->getPhysicalInterfaces()[ 0 ]->getSwitchport()->getSwitcher()->getVendor()->getBundleName() );
+app/Http/Controllers/Interfaces/Common.php:            $vi->setName('');
+app/Http/Controllers/Interfaces/Common.php:            $vi->setChannelgroup(null);
+app/Http/Controllers/Interfaces/Common.php:            $vi->setLagFraming(false);
+app/Http/Controllers/Interfaces/Common.php:            $vi->setFastLACP(false);
+app/Http/Controllers/Interfaces/VlanInterfaceController.php:                'maxbgpprefix'              => $request->old( 'maxbgpprefix',           $vi->getCustomer()->getMaxprefixes() ),
+app/Http/Controllers/Interfaces/PhysicalInterfaceController.php:            'enableFanout'                => $this->resellerMode() && $vi && $vi->getCustomer()->isResoldCustomer(),
+app/Http/Controllers/Interfaces/PhysicalInterfaceController.php:        if( !( $this->resellerMode() && $vi && $vi->getCustomer()->isResoldCustomer() ) ) {
+app/Http/Controllers/Interfaces/VirtualInterfaceController.php:            $name = $request->old( 'name', $vi->getName() );
+app/Http/Controllers/Interfaces/VirtualInterfaceController.php:                'cust'                  => $request->old( 'cust',              $vi->getCustomer() ),
+app/Http/Controllers/Interfaces/VirtualInterfaceController.php:                'trunk'                 => $request->old( 'trunk',             ( $vi->getTrunk()      ? 1 : 0 ) ),
+app/Http/Controllers/Interfaces/VirtualInterfaceController.php:                'lag_framing'           => $request->old( 'lag_framing',       ( $vi->getLagFraming() ? 1 : 0 ) ),
+app/Http/Controllers/Interfaces/VirtualInterfaceController.php:                'fastlacp'              => $request->old( 'fastlacp',          ( $vi->getFastLACP()   ? 1 : 0 ) ),
+app/Http/Controllers/Interfaces/VirtualInterfaceController.php:                'description'           => $request->old( 'description',       $vi->getDescription() ),
+app/Http/Controllers/Interfaces/VirtualInterfaceController.php:                'channel-group'         => $request->old( 'channel-group',     $vi->getChannelgroup() ),
+app/Http/Controllers/Interfaces/VirtualInterfaceController.php:                'mtu'                   => $request->old( 'mtu',               $vi->getMtu() ),
+app/Http/Controllers/Interfaces/VirtualInterfaceController.php:            'cb'                => $vi ? $vi->getCoreBundle() : false,
+app/Http/Controllers/Interfaces/VirtualInterfaceController.php:        if( count( $vi->getPhysicalInterfaces() ) == 0 ) {
+app/Http/Controllers/Interfaces/VirtualInterfaceController.php:        $vi->setCustomer(               $cust );
+app/Http/Controllers/Interfaces/VirtualInterfaceController.php:        $vi->setTrunk(            $request->input( 'trunk' )          ? 1 : 0 );
+app/Http/Controllers/Interfaces/VirtualInterfaceController.php:        $vi->setLagFraming(  $request->input( 'lag_framing' )    ? 1 : 0 );
+app/Http/Controllers/Interfaces/VirtualInterfaceController.php:        $vi->setFastLACP(       $request->input( 'fastlacp' )       ? 1 : 0);
+app/Http/Controllers/Interfaces/VirtualInterfaceController.php:        $vi->setName(                   trim( $request->input('name' ) , '"') );
+app/Http/Controllers/Interfaces/VirtualInterfaceController.php:        $vi->setDescription(            $request->input( 'description'      ) );
+app/Http/Controllers/Interfaces/VirtualInterfaceController.php:        $vi->setChannelgroup(           $request->input( 'channel-group'    ) );
+app/Http/Controllers/Interfaces/VirtualInterfaceController.php:        $vi->setMtu(                    $request->input( 'mtu'              ) );
+app/Http/Controllers/Interfaces/VirtualInterfaceController.php:        if( count( $vi->getPhysicalInterfaces() ) > 0 ) {
+app/Http/Controllers/Interfaces/VirtualInterfaceController.php:            if( count( $vi->getPhysicalInterfaces() ) == 1 && !$request->input( 'lag_framing' ) && $request->input( 'channel-group' ) === null ) {
+app/Http/Controllers/Interfaces/VirtualInterfaceController.php:                return Redirect::to( $request->input( 'id' ) ? 'interfaces/virtual/edit/'.$vi->getId() : 'interfaces/virtual/add' )->withInput();
+app/Http/Controllers/Interfaces/VirtualInterfaceController.php:        return Redirect::to( 'interfaces/virtual/edit/'.$vi->getId());
+app/Http/Controllers/Interfaces/VirtualInterfaceController.php:        $vi->setTrunk( $request->input( 'trunk', false ) );
+app/Http/Controllers/Interfaces/VirtualInterfaceController.php:        $vi->setCustomer( $c );
+app/Http/Controllers/Interfaces/VirtualInterfaceController.php:        $vi->addPhysicalInterface(  $pi);
+app/Http/Controllers/Interfaces/VirtualInterfaceController.php:        return Redirect::route( 'interfaces/virtual/edit', [ 'id' => $vi->getId() ] );
+app/Http/Controllers/Interfaces/VirtualInterfaceController.php:        if( $vi->getCoreBundle() ) {
+app/Http/Controllers/Interfaces/VirtualInterfaceController.php:        foreach( $vi->getPhysicalInterfaces() as $pi) {
+app/Http/Controllers/Interfaces/VirtualInterfaceController.php:            $vi->removePhysicalInterface( $pi );
+app/Http/Controllers/Interfaces/VirtualInterfaceController.php:        foreach( $vi->getVlanInterfaces() as $vli ) {
+app/Http/Controllers/Interfaces/VirtualInterfaceController.php:            $vi->removeVlanInterface( $vli );
+app/Http/Controllers/Interfaces/VirtualInterfaceController.php:        foreach( $vi->getMACAddresses() as $mac){
+app/Http/Controllers/Interfaces/CoreBundleController.php:            $vi->setCustomer(           D2EM::getRepository( CustomerEntity::class )->find( $request->input( 'customer' ) ) );
+app/Http/Controllers/Interfaces/CoreBundleController.php:            $vi->setMtu(                $request->input( "mtu"                      ) );
+app/Http/Controllers/Interfaces/CoreBundleController.php:            $vi->setName(               $request->input( "vi-name-$side"            ) );
+app/Http/Controllers/Interfaces/CoreBundleController.php:            $vi->setChannelgroup(       $request->input( "vi-channel-number-$side"  ) );
+app/Http/Controllers/Interfaces/CoreBundleController.php:            $vi->setTrunk(        $request->input( 'framing'    ) ?? false      );
+app/Http/Controllers/Interfaces/CoreBundleController.php:            $vi->setFastLACP(   $request->input( 'fast-lacp'  ) ?? false      );
+app/Http/Controllers/Interfaces/CoreBundleController.php:                $vi->setLagFraming( true );
+app/Http/Controllers/RsPrefixesController.php:            foreach( $vi->getVlanInterfaces() as $vli ) {
+app/Http/Controllers/Api/V4/CustomerController.php:            foreach($vi->getPhysicalInterfaces() as $pi){
+app/Http/Controllers/Api/V4/SwitchPortController.php:                    'id'            => $vi->getCustomer()->getId(),
+app/Http/Controllers/Api/V4/SwitchPortController.php:                    'name'          => $vi->getCustomer()->getName(),
+app/Http/Controllers/Customer/CustomerController.php:            foreach( $vi->getVlanInterfaces() as $vli ) {
+app/Http/Controllers/Customer/CustomerController.php:                foreach( $vi->getPhysicalInterfaces() as $pi ) {
+app/Http/Controllers/StatisticsController.php:                $c = $vi->getCustomer();
+app/Http/Controllers/StatisticsController.php:                    foreach( $vi->getVlanInterfaces() as $vli ) {
+app/Http/Controllers/StatisticsController.php:                    foreach( $vi->getVlanInterfaces() as $dvli ) {
+app/Http/Requests/CoreBundle/StoreAdd.php:            'vi-name-a'                 => ( $this->input('type') == CoreBundleEntity::TYPE_L2_LAG || $this->input('type') == CoreBundleEntity::TYPE_L3_LAG) ? "required|string|max:255" : "nullable",
+app/Http/Requests/CoreBundle/StoreAdd.php:            'vi-name-b'                 => ( $this->input('type') == CoreBundleEntity::TYPE_L2_LAG || $this->input('type') == CoreBundleEntity::TYPE_L3_LAG) ? "required|string|max:255" : "nullable",
+app/Http/Requests/CoreBundle/StoreAdd.php:            'vi-channel-number-a'       => ( $this->input('type') == CoreBundleEntity::TYPE_L2_LAG || $this->input('type') == CoreBundleEntity::TYPE_L3_LAG) ? "required|integer|min:0" : "nullable",
+app/Http/Requests/CoreBundle/StoreAdd.php:            'vi-channel-number-b'       => ( $this->input('type') == CoreBundleEntity::TYPE_L2_LAG || $this->input('type') == CoreBundleEntity::TYPE_L3_LAG) ? "required|integer|min:0" : "nullable"
+app/Http/Requests/CoreBundle/StoreEdit.php:            'vi-name-a'                 => ( $this->input('type') == CoreBundleEntity::TYPE_L2_LAG || $this->input('type') == CoreBundleEntity::TYPE_L3_LAG) ? "required|string|max:255" : "nullable",
+app/Http/Requests/CoreBundle/StoreEdit.php:            'vi-name-b'                 => ( $this->input('type') == CoreBundleEntity::TYPE_L2_LAG || $this->input('type') == CoreBundleEntity::TYPE_L3_LAG) ? "required|string|max:255" : "nullable",
+app/Http/Requests/CoreBundle/StoreEdit.php:            'vi-channel-number-a'       => ( $this->input('type') == CoreBundleEntity::TYPE_L2_LAG || $this->input('type') == CoreBundleEntity::TYPE_L3_LAG) ? "required|integer|min:0" : "nullable",
+app/Http/Requests/CoreBundle/StoreEdit.php:            'vi-channel-number-b'       => ( $this->input('type') == CoreBundleEntity::TYPE_L2_LAG || $this->input('type') == CoreBundleEntity::TYPE_L3_LAG) ? "required|integer|min:0" : "nullable"
+app/Http/Requests/Customer/Store.php:                    foreach( $vi->getPhysicalInterfaces() as $pi ) {
+app/Http/Requests/Customer/Store.php:                foreach( $vi->getPhysicalInterfaces() as $pi ) {
+app/Models/Customer.php:            foreach( $vi->vlanInterfaces as $vli ) {
+app/Models/Customer.php:            foreach( $vi->vlanInterfaces as $vli ) {
+app/Models/Customer.php:            foreach( $vi->vlanInterfaces as $vli ) {
+app/Jobs/FetchFilteredPrefixesForCustomer.php:            foreach( $vi->vlanInterfaces as $vli ) {
+app/Utils/Export/JsonSchema.php:                foreach( $vi->getPhysicalInterfaces() as $pi ) {
+app/Utils/Export/JsonSchema.php:                foreach( $vi->getVlanInterfaces() as $vli ) {
+app/Utils/Export/JsonSchema.php:                        if( ( $asmacro = $vi->getCustomer()->resolveAsMacro( 4, "AS", true ) ) !== null ) {
+app/Utils/Export/JsonSchema.php:                        if( !is_null ($vi->getCustomer()->getMaxprefixes()) ) {
+app/Utils/Export/JsonSchema.php:                            $vlanentry['ipv4']['max_prefix'] = $vi->getCustomer()->getMaxprefixes();
+app/Utils/Export/JsonSchema.php:                        if( ( $asmacro = $vi->getCustomer()->resolveAsMacro( 6, "AS", true ) ) !== null ) {
+app/Utils/Export/JsonSchema.php:                        if( !is_null ($vi->getCustomer()->getMaxprefixes()) ) {
+app/Utils/Export/JsonSchema.php:                            $vlanentry['ipv6']['max_prefix'] = $vi->getCustomer()->getMaxprefixes();
+database/Repositories/VirtualInterface.php:        if( $vi->getChann

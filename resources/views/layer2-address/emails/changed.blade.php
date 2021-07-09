@@ -9,6 +9,8 @@ of {{ $event->customer }} {{ $event->action == 'add' ? 'added' : 'deleted' }}
 the MAC address ``{{ $event->mac }}`` {{ $event->action == 'add' ? 'to' : 'from' }}
 [this VLAN interface (id: {{ $event->vli->getId() }})]({{ route( "layer2-address@forVlanInterface" , [ "vliid" => $event->vli->getId() ] ) }}).
 
+This is on {{ $event->vli->getVlan()->getId() }} ({{ $event->vli->getVlan()->getName() }})
+
 **NB:** You should view the link above before making any switch changes to ensure the <?= config( 'ixp_fe.lang.customer.one' ) ?> has completed all their editing.
 
 @endcomponent

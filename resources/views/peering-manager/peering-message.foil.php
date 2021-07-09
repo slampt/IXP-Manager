@@ -1,6 +1,6 @@
 Dear <?= $t->peer->getName() ?> Peering Team,
 
-We are <?= $t->user->getCustomer()->getName() ?> (<?= $t->user->getCustomer()->getCorpwww() ?>) and we are fellow members of <?= config( "identity.orgname" ) ?> (<?= config( "identity.location.city" ) ?>, <?= config( "identity.location.country") ?>).
+We are <?= $t->user->getCustomer()->getName() ?> (<?= $t->user->getCustomer()->getCorpwww() ?>) and we are fellow members of <?= config( "identity.orgname" ) ?> (<?= config( "identity.location.country") ?>).
 
 We would like to arrange peering session(s) with you on the following interface(s):
 
