@@ -3,7 +3,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 6.20.17.
+ * Generated for Laravel 6.20.28.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -3219,8 +3219,30 @@
          */ 
         public static function flush()
         {
-                        /** @var \Illuminate\Cache\ArrayStore $instance */
+                        /** @var \Illuminate\Cache\FileStore $instance */
                         return $instance->flush();
+        }
+                    /**
+         * Get the Filesystem instance.
+         *
+         * @return \Illuminate\Filesystem\Filesystem 
+         * @static 
+         */ 
+        public static function getFilesystem()
+        {
+                        /** @var \Illuminate\Cache\FileStore $instance */
+                        return $instance->getFilesystem();
+        }
+                    /**
+         * Get the working directory of the cache.
+         *
+         * @return string 
+         * @static 
+         */ 
+        public static function getDirectory()
+        {
+                        /** @var \Illuminate\Cache\FileStore $instance */
+                        return $instance->getDirectory();
         }
                     /**
          * Get the cache key prefix.
@@ -3230,35 +3252,8 @@
          */ 
         public static function getPrefix()
         {
-                        /** @var \Illuminate\Cache\ArrayStore $instance */
+                        /** @var \Illuminate\Cache\FileStore $instance */
                         return $instance->getPrefix();
-        }
-                    /**
-         * Get a lock instance.
-         *
-         * @param string $name
-         * @param int $seconds
-         * @param string|null $owner
-         * @return \Illuminate\Contracts\Cache\Lock 
-         * @static 
-         */ 
-        public static function lock($name, $seconds = 0, $owner = null)
-        {
-                        /** @var \Illuminate\Cache\ArrayStore $instance */
-                        return $instance->lock($name, $seconds, $owner);
-        }
-                    /**
-         * Restore a lock instance using the owner identifier.
-         *
-         * @param string $name
-         * @param string $owner
-         * @return \Illuminate\Contracts\Cache\Lock 
-         * @static 
-         */ 
-        public static function restoreLock($name, $owner)
-        {
-                        /** @var \Illuminate\Cache\ArrayStore $instance */
-                        return $instance->restoreLock($name, $owner);
         }
          
     }
@@ -7729,10 +7724,6 @@
             /**
      * 
      *
-     * @method static \Illuminate\Redis\Limiters\ConcurrencyLimiterBuilder funnel(string $name)
-     * @method static \Illuminate\Redis\Limiters\DurationLimiterBuilder throttle(string $name)
-     * @see \Illuminate\Redis\RedisManager
-     * @see \Illuminate\Contracts\Redis\Factory
      */ 
         class Redis {
                     /**
@@ -9095,7 +9086,7 @@
          * if the proxy is trusted (see "setTrustedProxies()"), otherwise it returns
          * the latter (from the "SERVER_PROTOCOL" server parameter).
          *
-         * @return string 
+         * @return string|null 
          * @static 
          */ 
         public static function getProtocolVersion()
@@ -13874,9 +13865,9 @@
          * sales:PriceRequest
          * 
          * Internal note: Performance-sensitive method.
+         * 
+         * {@inheritDoc}
          *
-         * @param string $className
-         * @return \Doctrine\ORM\ClassMetadata 
          * @static 
          */ 
         public static function getClassMetadata($className)
@@ -13965,14 +13956,14 @@
          *    during the search.
          * @param int|null $lockVersion The version of the entity to find when using
          * optimistic locking.
+         * @psalm-param class-string<T> $className
          * @return object|null The entity instance or NULL if the entity can not be found.
+         * @psalm-return ?T
          * @throws OptimisticLockException
          * @throws ORMInvalidArgumentException
          * @throws TransactionRequiredException
          * @throws ORMException
          * @template T
-         * @psalm-param class-string<T> $className
-         * @psalm-return ?T
          * @static 
          */ 
         public static function find($className, $id, $lockMode = null, $lockVersion = null)
@@ -14086,7 +14077,6 @@
          * Entities which previously referenced the detached entity will continue to
          * reference it.
          *
-         * @deprecated 2.7 This method is being removed from the ORM and won't have any replacement
          * @param object $entity The entity to detach.
          * @return void 
          * @throws ORMInvalidArgumentException
@@ -14139,10 +14129,10 @@
          * Gets the repository for an entity class.
          *
          * @param string $entityName The name of the entity.
-         * @return \Doctrine\ORM\ObjectRepository|\Doctrine\ORM\EntityRepository The repository class.
-         * @template T
          * @psalm-param class-string<T> $entityName
+         * @return \Doctrine\ORM\ObjectRepository|\Doctrine\ORM\EntityRepository The repository class.
          * @psalm-return EntityRepository<T>
+         * @template T
          * @static 
          */ 
         public static function getRepository($entityName)
@@ -14741,9 +14731,9 @@
          * sales:PriceRequest
          * 
          * Internal note: Performance-sensitive method.
+         * 
+         * {@inheritDoc}
          *
-         * @param string $className
-         * @return \Doctrine\ORM\ClassMetadata 
          * @static 
          */ 
         public static function getClassMetadata($className)
@@ -14832,14 +14822,14 @@
          *    during the search.
          * @param int|null $lockVersion The version of the entity to find when using
          * optimistic locking.
+         * @psalm-param class-string<T> $className
          * @return object|null The entity instance or NULL if the entity can not be found.
+         * @psalm-return ?T
          * @throws OptimisticLockException
          * @throws ORMInvalidArgumentException
          * @throws TransactionRequiredException
          * @throws ORMException
          * @template T
-         * @psalm-param class-string<T> $className
-         * @psalm-return ?T
          * @static 
          */ 
         public static function find($className, $id, $lockMode = null, $lockVersion = null)
@@ -14953,7 +14943,6 @@
          * Entities which previously referenced the detached entity will continue to
          * reference it.
          *
-         * @deprecated 2.7 This method is being removed from the ORM and won't have any replacement
          * @param object $entity The entity to detach.
          * @return void 
          * @throws ORMInvalidArgumentException
@@ -15006,10 +14995,10 @@
          * Gets the repository for an entity class.
          *
          * @param string $entityName The name of the entity.
-         * @return \Doctrine\ORM\ObjectRepository|\Doctrine\ORM\EntityRepository The repository class.
-         * @template T
          * @psalm-param class-string<T> $entityName
+         * @return \Doctrine\ORM\ObjectRepository|\Doctrine\ORM\EntityRepository The repository class.
          * @psalm-return EntityRepository<T>
+         * @template T
          * @static 
          */ 
         public static function getRepository($entityName)
@@ -18761,6 +18750,47 @@
          *
          * @static 
          */ 
+        public static function determineVersionUsing($determineVersionCallable)
+        {
+                        /** @var \Facade\FlareClient\Flare $instance */
+                        return $instance->determineVersionUsing($determineVersionCallable);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function reportErrorLevels($reportErrorLevels)
+        {
+                        /** @var \Facade\FlareClient\Flare $instance */
+                        return $instance->reportErrorLevels($reportErrorLevels);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function filterExceptionsUsing($filterExceptionsCallable)
+        {
+                        /** @var \Facade\FlareClient\Flare $instance */
+                        return $instance->filterExceptionsUsing($filterExceptionsCallable);
+        }
+                    /**
+         * 
+         *
+         * @return null|string 
+         * @static 
+         */ 
+        public static function version()
+        {
+                        /** @var \Facade\FlareClient\Flare $instance */
+                        return $instance->version();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
         public static function getMiddleware()
         {
                         /** @var \Facade\FlareClient\Flare $instance */
@@ -18911,6 +18941,16 @@
          *
          * @static 
          */ 
+        public static function censorRequestBodyFields($fieldNames)
+        {
+                        /** @var \Facade\FlareClient\Flare $instance */
+                        return $instance->censorRequestBodyFields($fieldNames);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
         public static function createReport($throwable)
         {
                         /** @var \Facade\FlareClient\Flare $instance */
@@ -19035,6 +19075,29 @@
         {
                         /** @var \Laravel\Socialite\SocialiteManager $instance */
                         return $instance->formatConfig($config);
+        }
+                    /**
+         * Forget all of the resolved driver instances.
+         *
+         * @return \Laravel\Socialite\SocialiteManager 
+         * @static 
+         */ 
+        public static function forgetDrivers()
+        {
+                        /** @var \Laravel\Socialite\SocialiteManager $instance */
+                        return $instance->forgetDrivers();
+        }
+                    /**
+         * Set the container instance used by the manager.
+         *
+         * @param \Illuminate\Contracts\Container\Container $container
+         * @return \Laravel\Socialite\SocialiteManager 
+         * @static 
+         */ 
+        public static function setContainer($container)
+        {
+                        /** @var \Laravel\Socialite\SocialiteManager $instance */
+                        return $instance->setContainer($container);
         }
                     /**
          * Get the default driver name.
